@@ -3,33 +3,6 @@
 #include <stdlib.h> // For abs()
 #include <string.h> // For memset()
 
-#define ST7735_SLPOUT   0x11
-#define ST7735_FRMCTR1  0xB1
-#define ST7735_FRMCTR2  0xB2
-#define ST7735_FRMCTR3  0xB3
-#define ST7735_INVCTR   0xB4
-#define ST7735_PWCTR1   0xC0
-#define ST7735_PWCTR2   0xC1
-#define ST7735_PWCTR3   0xC2
-#define ST7735_PWCTR4   0xC3
-#define ST7735_PWCTR5   0xC4
-#define ST7735_VMCTR1   0xC5
-#define ST7735_COLMOD   0x3A
-#define ST7735_GMCTRP1  0xE0
-#define ST7735_GMCTRN1  0xE1
-#define ST7735_NORON    0x13
-#define ST7735_DISPON   0x29
-#define ST7735_CASET    0x2A
-#define ST7735_RASET    0x2B
-#define ST7735_RAMWR    0x2C
-#define ST7735_INVOFF   0x20
-#define ST7735_INVON    0x21
-
-#define ST7735_MADCTL     0x36
-#define ST7735_MADCTL_MX  0x40
-#define ST7735_MADCTL_MY  0x80
-#define ST7735_MADCTL_MV  0x20
-
 // 帧缓冲区：128x128 像素, 16位色 (RGB565), 2 字节/像素
 uint8_t frame[ST7735_WIDTH * ST7735_HEIGHT * 2] = {0x00};
 // 脏矩阵,高位在前,如果位是1代表需要刷新
@@ -47,21 +20,21 @@ void ST7735_Reset(void){
 void ST7735_WriteCommand(uint8_t cmd){
 	HAL_GPIO_WritePin(ST7735_DC_GPIO_Port, ST7735_DC_Pin, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(ST7735_CS_GPIO_Port, ST7735_CS_Pin, GPIO_PIN_RESET);
-	HAL_SPI_Transmit(&ST7735_SPI_INSTANCE, &cmd, 1, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(&ST7735_SPI, &cmd, 1, HAL_MAX_DELAY);
 	HAL_GPIO_WritePin(ST7735_CS_GPIO_Port, ST7735_CS_Pin, GPIO_PIN_SET);
 }
 
 void ST7735_WriteByte(uint8_t data){
   HAL_GPIO_WritePin(ST7735_DC_GPIO_Port, ST7735_DC_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(ST7735_CS_GPIO_Port, ST7735_CS_Pin, GPIO_PIN_RESET);
-  HAL_SPI_Transmit(&ST7735_SPI_INSTANCE, &data, 1, HAL_MAX_DELAY);
+  HAL_SPI_Transmit(&ST7735_SPI, &data, 1, HAL_MAX_DELAY);
   HAL_GPIO_WritePin(ST7735_CS_GPIO_Port, ST7735_CS_Pin, GPIO_PIN_SET);
 }
 
 void ST7735_WriteData(uint8_t *data, size_t data_size){
   HAL_GPIO_WritePin(ST7735_DC_GPIO_Port, ST7735_DC_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(ST7735_CS_GPIO_Port, ST7735_CS_Pin, GPIO_PIN_RESET);
-  HAL_SPI_Transmit(&ST7735_SPI_INSTANCE, data, data_size, HAL_MAX_DELAY);
+  HAL_SPI_Transmit(&ST7735_SPI, data, data_size, HAL_MAX_DELAY);
   HAL_GPIO_WritePin(ST7735_CS_GPIO_Port, ST7735_CS_Pin, GPIO_PIN_SET);
 }
 
