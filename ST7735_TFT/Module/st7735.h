@@ -6,14 +6,16 @@
 #include "stdio.h"
 #include "fonts.h"
 
-#define ST7735_RST_Pin RES_Pin
-#define ST7735_RST_GPIO_Port RES_GPIO_Port
-#define ST7735_DC_Pin DC_Pin
-#define ST7735_DC_GPIO_Port DC_GPIO_Port
-#define ST7735_CS_Pin CS_Pin
-#define ST7735_CS_GPIO_Port CS_GPIO_Port
-// #define ST7735_BLK_Pin BLK_Pin
-// #define ST7735_BLK_GPIO_Port BLK_GPIO_Port
+#define ST7735 
+
+#define ST7735_RST_Pin 				TFT_RES_Pin
+#define ST7735_RST_GPIO_Port 	TFT_RES_GPIO_Port
+#define ST7735_DC_Pin 				TFT_DC_Pin
+#define ST7735_DC_GPIO_Port		TFT_DC_GPIO_Port
+#define ST7735_CS_Pin 				TFT_CS_Pin
+#define ST7735_CS_GPIO_Port 	TFT_CS_GPIO_Port
+#define ST7735_BLK_Pin 				TFT_BLK_Pin
+#define ST7735_BLK_GPIO_Port 	TFT_BLK_GPIO_Port
 
 #define ST7735_SPI_INSTANCE hspi1
 
@@ -44,7 +46,7 @@
 #define ST7735_WHITE   0xFFFF
 #define ST7735_COLOR565(r, g, b) (((r & 0xF8) << 8) | ((g & 0xFC) << 3) | ((b & 0xF8) >> 3))
 
-//extern const uint8_t Font_8x8_data [96][ 8];
+// Font
 extern const uint8_t Font_8x16_consolas[96][16];
 
 void ST7735_Init(void);

@@ -35,7 +35,7 @@ uint8_t frame[ST7735_WIDTH * ST7735_HEIGHT * 2] = {0x00};
 // 脏矩阵,高位在前,如果位是1代表需要刷新
 uint8_t frame_bit[ST7735_HEIGHT][ST7735_WIDTH / 8] = {0x00};
 
-// --- 低级SPI函数 ---
+// --- 底层SPI函数 ---
 
 void ST7735_Reset(void){
 	HAL_GPIO_WritePin(ST7735_RST_GPIO_Port, ST7735_RST_Pin, GPIO_PIN_RESET);
@@ -67,7 +67,7 @@ void ST7735_WriteData(uint8_t *data, size_t data_size){
 
 /**
  * @brief 设置屏幕旋转
- * @note  修复了 ST7735_MADCTL_MODE 拼写错误 (假设为 BGR)
+ * @note  
  */
 void ST7735_SetRotation(uint8_t rotation){
 	uint8_t madctl = 0;
@@ -94,7 +94,7 @@ void ST7735_SetRotation(uint8_t rotation){
 
 /**
   * @brief 初始化
-  * @note  修正了 RASET 结束地址以匹配 128x128 缓冲区
+  * @note  
   */
 void ST7735_Init(void) {
 	ST7735_Reset();
@@ -270,7 +270,7 @@ void ST7735_FillScreen(uint16_t color) {
 }
 
 /**
-  * @brief 绘制图像 (直接写入屏幕)
+  * @brief 绘制图像 (直接写入屏幕) //待更改
   * @note  此函数绕过帧缓冲区，用于从Flash绘制大图像
  * @note  坐标 (x, y) = (水平, 垂直)
   */
