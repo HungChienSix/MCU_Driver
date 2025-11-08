@@ -1,0 +1,28 @@
+--cpu=Cortex-M4.fp.sp
+"oled_ssd1315\startup_stm32f401xc.o"
+"oled_ssd1315\main.o"
+"oled_ssd1315\gpio.o"
+"oled_ssd1315\i2c.o"
+"oled_ssd1315\stm32f4xx_it.o"
+"oled_ssd1315\stm32f4xx_hal_msp.o"
+"oled_ssd1315\stm32f4xx_hal_i2c.o"
+"oled_ssd1315\stm32f4xx_hal_i2c_ex.o"
+"oled_ssd1315\stm32f4xx_hal_rcc.o"
+"oled_ssd1315\stm32f4xx_hal_rcc_ex.o"
+"oled_ssd1315\stm32f4xx_hal_flash.o"
+"oled_ssd1315\stm32f4xx_hal_flash_ex.o"
+"oled_ssd1315\stm32f4xx_hal_flash_ramfunc.o"
+"oled_ssd1315\stm32f4xx_hal_gpio.o"
+"oled_ssd1315\stm32f4xx_hal_dma_ex.o"
+"oled_ssd1315\stm32f4xx_hal_dma.o"
+"oled_ssd1315\stm32f4xx_hal_pwr.o"
+"oled_ssd1315\stm32f4xx_hal_pwr_ex.o"
+"oled_ssd1315\stm32f4xx_hal_cortex.o"
+"oled_ssd1315\stm32f4xx_hal.o"
+"oled_ssd1315\stm32f4xx_hal_exti.o"
+"oled_ssd1315\system_stm32f4xx.o"
+"oled_ssd1315\oled.o"
+--strict --scatter "OLED_SSD1315\OLED_SSD1315.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "OLED_SSD1315.map" -o OLED_SSD1315\OLED_SSD1315.axf

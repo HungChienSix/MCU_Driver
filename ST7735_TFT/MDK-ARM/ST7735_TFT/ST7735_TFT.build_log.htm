@@ -1,0 +1,119 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ¦ÌVision V5.43.1.0
+Copyright (C) 2025 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: 123 123@123, 123, LIC=ZB4EI-TCYMN-74IS0-BADJE-QG69Q-QQ70N
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Plus  Version: 5.43.0.0
+Toolchain Path:  C:\Users\30581\AppData\Local\Keil_v5\ARM\ARMCLANG\Bin
+C Compiler:      ArmClang.exe V6.24
+Assembler:       Armasm.exe V6.24
+Linker/Locator:  ArmLink.exe V6.24
+Library Manager: ArmAr.exe V6.24
+Hex Converter:   FromElf.exe V6.24
+CPU DLL:         SARMCM3.DLL V5.43.0.0
+Dialog DLL:      DCM.DLL V1.17.5.0
+Target DLL:      CMSIS_AGDI.dll V1.33.24.0
+Dialog DLL:      TCM.DLL V1.56.6.0
+ 
+<h2>Project:</h2>
+D:\Keil_Workspace\ST7735_TFT\MDK-ARM\ST7735_TFT.uvprojx
+Project File Date:  11/08/2025
+
+<h2>Output:</h2>
+*** Using Compiler 'V6.24', folder: 'C:\Users\30581\AppData\Local\Keil_v5\ARM\ARMCLANG\Bin'
+Rebuild target 'ST7735_TFT'
+assembling startup_stm32f401xc.s...
+compiling spi.c...
+../Core/Src/main.c(125): warning: incompatible pointer types passing 'const uint8_t (*)[96][16]' (aka 'const unsigned char (*)[96][16]') to parameter of type 'const struFont *' [-Wincompatible-pointer-types]
+  125 |                 ST7735_DrawString(0, 0,"ABCDEabcde\0",ST7735_BLUE,&Font_8x16_consolas, 0);
+      |                                                                   ^~~~~~~~~~~~~~~~~~~
+../Module\st7735.h(57): note: passing argument to parameter 'font' here
+   57 | void ST7735_DrawString(uint16_t x0, uint16_t y0, const char *str, uint16_t color, const struFont *font, uint8_t type);
+      |                                                                                                   ^
+../Core/Src/main.c(126): warning: incompatible pointer types passing 'const uint8_t (*)[96][16]' (aka 'const unsigned char (*)[96][16]') to parameter of type 'const struFont *' [-Wincompatible-pointer-types]
+  126 |                 ST7735_DrawString(0,16,"ABCDEabcde\0",ST7735_BLUE,&Font_8x16_consolas, 1);
+      |                                                                   ^~~~~~~~~~~~~~~~~~~
+../Module\st7735.h(57): note: passing argument to parameter 'font' here
+   57 | void ST7735_DrawString(uint16_t x0, uint16_t y0, const char *str, uint16_t color, const struFont *font, uint8_t type);
+      |                                                                                                   ^
+../Core/Src/main.c(127): warning: incompatible pointer types passing 'const uint8_t (*)[96][16]' (aka 'const unsigned char (*)[96][16]') to parameter of type 'const struFont *' [-Wincompatible-pointer-types]
+  127 |                 ST7735_DrawString(0,32,"ABCDEabcde\0",ST7735_BLUE,&Font_8x16_consolas, 2);
+      |                                                                   ^~~~~~~~~~~~~~~~~~~
+../Module\st7735.h(57): note: passing argument to parameter 'font' here
+   57 | void ST7735_DrawString(uint16_t x0, uint16_t y0, const char *str, uint16_t color, const struFont *font, uint8_t type);
+      |                                                                                                   ^
+../Core/Src/main.c(128): warning: incompatible pointer types passing 'const uint8_t (*)[96][16]' (aka 'const unsigned char (*)[96][16]') to parameter of type 'const struFont *' [-Wincompatible-pointer-types]
+  128 |                 ST7735_DrawString(0,48,"ABCDEabcde\0",ST7735_BLUE,&Font_8x16_consolas, 3);
+      |                                                                   ^~~~~~~~~~~~~~~~~~~
+../Module\st7735.h(57): note: passing argument to parameter 'font' here
+   57 | void ST7735_DrawString(uint16_t x0, uint16_t y0, const char *str, uint16_t color, const struFont *font, uint8_t type);
+      |                                                                                                   ^
+../Core/Src/main.c(138): warning: passing 'char[10]' to parameter of type 'const uint8_t *' (aka 'const unsigned char *') converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+  138 |                 HAL_UART_Transmit(&huart1,ch,sizeof(ch),100);
+      |                                           ^~
+../Drivers/STM32F4xx_HAL_Driver/Inc\stm32f4xx_hal_uart.h(745): note: passing argument to parameter 'pData' here
+  745 | HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, const uint8_t *pData, uint16_t Size, uint32_t Timeout);
+      |                                                                               ^
+5 warnings generated.
+compiling main.c...
+compiling gpio.c...
+compiling usart.c...
+compiling stm32f4xx_hal_msp.c...
+compiling stm32f4xx_hal_rcc.c...
+compiling tim.c...
+compiling stm32f4xx_it.c...
+compiling stm32f4xx_hal_flash_ramfunc.c...
+compiling stm32f4xx_hal_gpio.c...
+compiling stm32f4xx_hal_flash.c...
+compiling stm32f4xx_hal_pwr_ex.c...
+compiling stm32f4xx_hal_pwr.c...
+compiling stm32f4xx_hal.c...
+compiling stm32f4xx_hal_rcc_ex.c...
+compiling stm32f4xx_hal_flash_ex.c...
+compiling stm32f4xx_hal_dma_ex.c...
+compiling stm32f4xx_hal_cortex.c...
+compiling stm32f4xx_hal_dma.c...
+compiling stm32f4xx_hal_spi.c...
+compiling stm32f4xx_hal_exti.c...
+compiling tft_ui.c...
+compiling fonts.c...
+compiling system_stm32f4xx.c...
+compiling stm32f4xx_hal_tim_ex.c...
+compiling st7735.c...
+compiling stm32f4xx_hal_uart.c...
+compiling stm32f4xx_hal_tim.c...
+linking...
+Program Size: Code=12986 RO-data=6618 RW-data=32 ZI-data=36688  
+FromELF: creating hex file...
+"ST7735_TFT\ST7735_TFT.axf" - 0 Error(s), 5 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                https://www.keil.com/pack/ARM.CMSIS.6.2.0.pack
+                ARM::CMSIS@6.2.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 6.1.1
+
+Package Vendor: Keil
+                https://www.keil.com/pack/Keil.STM32F4xx_DFP.3.1.1.pack
+                Keil::STM32F4xx_DFP@3.1.1
+                STMicroelectronics STM32F4 Series Device Support
+
+<h2>Collection of Component include folders:</h2>
+  ./RTE/_ST7735_TFT
+  C:/Users/30581/AppData/Local/Arm/Packs/ARM/CMSIS/6.2.0/CMSIS/Core/Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE@6.1.1
+      Include file:  CMSIS/Core/Include/tz_context.h
+Build Time Elapsed:  00:00:02
+</pre>
+</body>
+</html>
