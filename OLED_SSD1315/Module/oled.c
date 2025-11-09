@@ -20,12 +20,6 @@ void SSD1315_SetRotation(uint8_t rotation){
 		SSD1315_WriteCmd(0xA1); 
 		SSD1315_WriteCmd(0xC8); 
 	}
-	else 	if(rotation == 0x00){
-		//
-	}
-	else 	if(rotation == 0x00){
-		// 
-	}
 }
 		
 /**
@@ -40,8 +34,8 @@ void SSD1315_Init(void){
 	//SSD1315_WriteCmd(0x10);//set high column address
 	
 	SSD1315_WriteCmd(0x20); SSD1315_WriteCmd(0x00); // Horizontal Addressing Mode
-	SSD1315_WriteCmd(0x21); SSD1315_WriteCmd(ST7735_ColSTART ); SSD1315_WriteCmd(ST7735_ColEND ); // Col start and end
-	SSD1315_WriteCmd(0x22); SSD1315_WriteCmd(ST7735_PageSTART); SSD1315_WriteCmd(ST7735_PageEND); // Page start and end
+	SSD1315_WriteCmd(0x21); SSD1315_WriteCmd(SSD1315_ColSTART ); SSD1315_WriteCmd(SSD1315_ColEND ); // Col start and end
+	SSD1315_WriteCmd(0x22); SSD1315_WriteCmd(SSD1315_PageSTART); SSD1315_WriteCmd(SSD1315_PageEND); // Page start and end
 	
 	SSD1315_WriteCmd(0xA8); SSD1315_WriteCmd(0x3F); // Set Multiplex Ratio 0x3F+0x01 == 64d
 	SSD1315_WriteCmd(0xD3); SSD1315_WriteCmd(0x00); // Set Display Offset
