@@ -1,7 +1,7 @@
 #include "ssd1315.h"
 #include "string.h"
 
-uint8_t display_ram[8][128] = {0};/*显存*/
+uint8_t display_ram[8][128] = {0}; //屏幕显示缓冲区
 	
 void SSD1315_WriteCmd(uint8_t cmd){
 	HAL_I2C_Mem_Write(&SSD1315_I2C, SSD1315_Dev_Addr, SSD1315_MemCmd_Addr, I2C_MEMADD_SIZE_8BIT, &cmd, 1, 10);

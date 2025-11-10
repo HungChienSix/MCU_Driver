@@ -100,7 +100,7 @@ int main(void)
   while (1)
   {
 		for(uint8_t x=0;x<=40;x++){
-			OLED_DrawPixel(x,2*x, 1);
+			OLED_DrawPixel(2*x,x, 1);
 		}
 		OLED_RefreshScreen();
 		HAL_Delay(500);

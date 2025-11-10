@@ -3,7 +3,7 @@
 <title>Static Call Graph - [OLED_SSD1315\OLED_SSD1315.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image OLED_SSD1315\OLED_SSD1315.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Mon Nov 10 21:56:44 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Tue Nov 11 00:05:15 2025
 <BR><P>
 <H3>Maximum Stack Usage =        176 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -677,8 +677,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[4f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[72]"></a>OLED_RefreshScreen</STRONG> (Thumb, 166 bytes, Stack size 56 bytes, ssd1315.o(.text.OLED_RefreshScreen))
-<BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = OLED_RefreshScreen &rArr; HAL_I2C_Mem_Write &rArr; I2C_RequestMemoryWrite &rArr; I2C_WaitOnMasterAddressFlagUntilTimeout
+<P><STRONG><a name="[72]"></a>OLED_RefreshScreen</STRONG> (Thumb, 442 bytes, Stack size 48 bytes, ssd1315.o(.text.OLED_RefreshScreen))
+<BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = OLED_RefreshScreen &rArr; HAL_I2C_Mem_Write &rArr; I2C_RequestMemoryWrite &rArr; I2C_WaitOnMasterAddressFlagUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2C_Mem_Write
 </UL>
