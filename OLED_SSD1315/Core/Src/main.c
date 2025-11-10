@@ -23,6 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "ssd1315.h"
 #include "oled.h"
 #include "stdio.h"
 /* USER CODE END Includes */
@@ -90,7 +91,7 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-	SSD1315_Init();
+	OLED_Init();
 
   /* USER CODE END 2 */
 
@@ -99,9 +100,9 @@ int main(void)
   while (1)
   {
 		for(uint8_t x=0;x<=20;x++){
-			OLED_DrawPoint(x,x);
+			OLED_DrawPixel(x,30);
 		}
-		OLED_Refresh();
+		OLED_RefreshScreen();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

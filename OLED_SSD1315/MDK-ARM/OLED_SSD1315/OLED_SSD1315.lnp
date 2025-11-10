@@ -21,7 +21,9 @@
 "oled_ssd1315\stm32f4xx_hal.o"
 "oled_ssd1315\stm32f4xx_hal_exti.o"
 "oled_ssd1315\system_stm32f4xx.o"
+"oled_ssd1315\font.o"
 "oled_ssd1315\oled.o"
+"oled_ssd1315\ssd1315.o"
 --strict --scatter "OLED_SSD1315\OLED_SSD1315.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

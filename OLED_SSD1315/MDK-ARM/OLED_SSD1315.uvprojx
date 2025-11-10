@@ -617,6 +617,16 @@
           <GroupName>Module</GroupName>
           <Files>
             <File>
+              <FileName>font.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\font.c</FilePath>
+            </File>
+            <File>
+              <FileName>font.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Module\font.h</FilePath>
+            </File>
+            <File>
               <FileName>oled.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Module\oled.c</FilePath>
@@ -627,9 +637,14 @@
               <FilePath>..\Module\oled.h</FilePath>
             </File>
             <File>
-              <FileName>oledfont.h</FileName>
+              <FileName>ssd1315.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\ssd1315.c</FilePath>
+            </File>
+            <File>
+              <FileName>ssd1315.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Module\oledfont.h</FilePath>
+              <FilePath>..\Module\ssd1315.h</FilePath>
             </File>
           </Files>
         </Group>

@@ -1,9 +1,3 @@
-
-## ST7735 文件结构
-- `Module/st7735.c(.h)` 屏幕驱动IC芯片的驱动代码
-- `Module/oled.c(.h)` 包含OLED屏幕的基本绘制函数
-- `Module/fonts.c(.h)` 字体数据与相关结构体
-
 ## SSD1315 文件结构
 - `Module/ssd1315.c(.h)` 屏幕驱动IC芯片的驱动代码
 - `Module/oled.c(.h)` 包含OLED屏幕的基本绘制函数
@@ -109,5 +103,5 @@ void ST7735_DrawString(uint16_t x0, uint16_t y0, const char *str, uint16_t color
 
 ### `Module/font.h(.c)`
 
-字体的存储主要靠一个字体结构体,每类字体包含Normal和Bold两种类型。
+字体的存储主要靠一个字体结构体,每类字体包含Normal,Bold,Italy,斜体四种类型。
 
