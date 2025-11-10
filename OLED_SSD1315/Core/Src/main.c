@@ -99,10 +99,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		for(uint8_t x=0;x<=20;x++){
-			OLED_DrawPixel(x,30);
+		for(uint8_t x=0;x<=40;x++){
+			OLED_DrawPixel(x,2*x, 1);
 		}
 		OLED_RefreshScreen();
+		HAL_Delay(500);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

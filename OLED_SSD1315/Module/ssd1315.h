@@ -15,9 +15,9 @@
 #define SSD1315_MemData_Addr    0x40
 
 // Screen Size
-#define SSD1315_WIDTH 128
-#define SSD1315_HEIGHT 64
-#define SSD1315_PAGES 8
+#define SSD1315_WIDTH 	128
+#define SSD1315_HEIGHT 	64
+#define SSD1315_PAGES 	8
 
 // Screen Direction
 #define SSD1315_ROTATION    0x00
@@ -29,10 +29,8 @@
 #define SSD1315_INVERSE     0xA6
 
 void OLED_Init(void);
-void OLED_DrawPixel (uint8_t x, uint8_t y);
-void OLED_ClearPixel(uint8_t x, uint8_t y);
-void OLED_FillScreen (void);
-void OLED_ClearScreen(void);
+void OLED_DrawPixel (uint8_t x, uint8_t y, uint8_t SetPixel);
+void OLED_FillScreen(uint8_t SetPixel);
 void OLED_RefreshScreen(void);
 
 #endif

@@ -31,15 +31,15 @@ void SSD1315_SetRotation(uint8_t rotation){
 	* @param
 	*/
 void OLED_Init(void){
-	
-	SSD1315_WriteCmd(0xAE);//0xAE Set Display ON ,0xAF Set Display OFF `
+	HAL_Delay(100);
+	SSD1315_WriteCmd(0xAE);//0xAE Set Display ON ,0xAF Set Display OFF 
 	
 	SSD1315_WriteCmd(0x00);//set low  column address 
 	SSD1315_WriteCmd(0x10);//set high column address 
 	
-	SSD1315_WriteCmd(0x20); SSD1315_WriteCmd(0x00); // Horizontal Addressing Mode `
-	SSD1315_WriteCmd(0x21); SSD1315_WriteCmd(0x00); SSD1315_WriteCmd(SSD1315_WIDTH-1); // Col start and end
-	SSD1315_WriteCmd(0x22); SSD1315_WriteCmd(0x00); SSD1315_WriteCmd(SSD1315_PAGES-1); // Page start and end
+	SSD1315_WriteCmd(0x20); SSD1315_WriteCmd(0x10); // Horizontal Addressing Mode 
+	//SSD1315_WriteCmd(0x21); SSD1315_WriteCmd(0x00); SSD1315_WriteCmd(SSD1315_WIDTH-1); // Col start and end .Only for Other Addressing Mode 
+	//SSD1315_WriteCmd(0x22); SSD1315_WriteCmd(0x00); SSD1315_WriteCmd(SSD1315_PAGES-1); // Page start and end .Only for Other Addressing Mode 
 	
 	SSD1315_WriteCmd(0xA8); SSD1315_WriteCmd(0x3F); // Set Multiplex Ratio 0x3F+0x01 == 64d
 	SSD1315_WriteCmd(0xD3); SSD1315_WriteCmd(0x00); // Set Display Offset
@@ -59,38 +59,52 @@ void OLED_Init(void){
 	
 	SSD1315_WriteCmd(0xAF);//if AE open the sleep mode
 	
-	OLED_ClearScreen();
-	//OLED_RefreshScreen();
+	OLED_FillScreen(0);
 	HAL_I2C_Mem_Write(&SSD1315_I2C, SSD1315_Dev_Addr, SSD1315_MemData_Addr, I2C_MEMADD_SIZE_8BIT, (uint8_t*)display_ram, 1024, 500);
 }
 
-void OLED_DrawPixel(uint8_t x, uint8_t y){
-    if(x < SSD1315_WIDTH && y < SSD1315_HEIGHT){
-        uint8_t page = y / 8;
-        uint8_t bit_mask = 1 << (y % 8);
-        display_ram[page][x] |= bit_mask;
-    }
+/**
+	* @brief 绘制像素点
+	* @param
+	*/
+void OLED_DrawPixel(uint8_t x, uint8_t y, uint8_t SetPixel){
+	if((x > SSD1315_WIDTH)|(y > SSD1315_HEIGHT))
+		return;
+	if(SetPixel){
+		display_ram[y/8][x] |= (0x01 << (y%8));
+	}
+	else{
+		display_ram[y/8][x] |= ~(0x01 << (y%8));
+	}
 }
 
-void OLED_ClearPixel(uint8_t x, uint8_t y){
-    if(x < SSD1315_WIDTH && y < SSD1315_HEIGHT){
-        uint8_t page = y / 8;
-        uint8_t bit_mask = ~(1 << (y % 8));
-        display_ram[page][x] &= bit_mask;
-    }
+/**
+	* @brief 覆盖屏幕
+	* @param
+	*/
+void OLED_FillScreen(uint8_t SetPixel){
+	if(SetPixel){
+		memset(display_ram, 0xFF, 1024);
+	}
+	else{
+		memset(display_ram, 0x00, 1024);
+	}
 }
 
-void OLED_FillScreen(void){
-    //memset(display_ram, 0xFF, sizeof(display_ram));
-	memset(display_ram, 0xFF, 1024);
-}
-
-void OLED_ClearScreen(void){
-    //memset(display_ram, 0x00, sizeof(display_ram));
-	memset(display_ram, 0x00, 1024);
-}
-
+/**
+	* @brief 刷新屏幕
+	* @param
+	*/
 void OLED_RefreshScreen(void){
-	SSD1315_WriteData((uint8_t*)display_ram, 1024);
+	for(unsigned short int m = 0; m < SSD1315_PAGES; m++){
+		SSD1315_WriteCmd(0xB0+m);
+		SSD1315_WriteCmd(0x00);
+		SSD1315_WriteCmd(0x10);
+//		for(unsigned short int n = 0; n < SSD1315_WIDTH; n++){
+//			//SSD1315_WriteData((uint8_t*)display_ram, 1024);
+//			SSD1315_WriteData(&display_ram[m][n], 1);
+//		}
+		SSD1315_WriteData(&display_ram[m][0], 128);
+	}
 }
 
