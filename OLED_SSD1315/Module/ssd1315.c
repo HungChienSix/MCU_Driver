@@ -91,20 +91,121 @@ void OLED_FillScreen(uint8_t SetPixel){
 	}
 }
 
+// 定义校验码数组
+static uint8_t page_checksum[SSD1315_PAGES] = {0x00};
+
 /**
-	* @brief 刷新屏幕
-	* @param
-	*/
-void OLED_RefreshScreen(void){
-	for(unsigned short int m = 0; m < SSD1315_PAGES; m++){
-		SSD1315_WriteCmd(0xB0+m);
-		SSD1315_WriteCmd(0x00);
-		SSD1315_WriteCmd(0x10);
-//		for(unsigned short int n = 0; n < SSD1315_WIDTH; n++){
-//			//SSD1315_WriteData((uint8_t*)display_ram, 1024);
-//			SSD1315_WriteData(&display_ram[m][n], 1);
-//		}
-		SSD1315_WriteData(&display_ram[m][0], 128);
-	}
+  * @brief 计算页数据的校验码（简单的异或校验）
+  * @param page: 页号(0-7)
+  * @return 校验码
+  */
+uint8_t OLED_CalculateChecksum(uint8_t page) {
+    uint8_t checksum = 0;
+    for(int i = 0; i < 128; i++) {
+        checksum ^= display_ram[page][i];
+    }
+    return checksum;
 }
 
+uint8_t OLED_CalculateChecksum(uint8_t page) {
+    uint8_t crc = 0x00;
+    
+    for(int i = 0; i <= SSD1315_WIDTH; i++) {
+        crc = crc8_table[crc ^ display_ram[page][i]];
+    }
+    
+    return crc;
+}
+
+/**
+  * @brief 刷新屏幕（带校验码检查）
+  * @param
+  */
+void OLED_RefreshScreen(void) {
+    for(uint8_t m = 0; m < SSD1315_PAGES; m++) {
+        uint8_t current_checksum = OLED_CalculateChecksum(m);
+        
+        // 只有校验码改变时才刷新该页
+        if(current_checksum != page_checksum[m]) {
+            SSD1315_WriteCmd(0xB0 + m);
+            SSD1315_WriteData(&display_ram[m][0], 128);
+            page_checksum[m] = current_checksum; // 更新校验码
+        }
+    }
+}
+
+/**
+  * @brief 强制刷新整个屏幕（忽略校验码）
+  * @param
+  */
+void OLED_RefreshScreen_Force(void) {
+    for(uint8_t m = 0; m < SSD1315_PAGES; m++) {
+        SSD1315_WriteCmd(0xB0 + m);
+        SSD1315_WriteData(&display_ram[m][0], 128);
+        page_checksum[m] = OLED_CalculateChecksum(m); // 更新校验码
+    }
+}
+
+/**
+  * @brief 刷新指定区域（带校验码检查）
+  * @param start_page: 起始页(0-7)
+  * @param end_page: 结束页(0-7)
+  * @param start_col: 起始列(0-127)
+  * @param end_col: 结束列(0-127)
+  */
+void OLED_RefreshArea(uint8_t start_page, uint8_t end_page, uint8_t start_col, uint8_t end_col) {
+    // 参数检查
+    if(start_page > end_page || start_col > end_col) return;
+    if(end_page >= SSD1315_PAGES || end_col >= 128) return;
+    
+    uint8_t width = end_col - start_col + 1;
+    
+    for(uint8_t page = start_page; page <= end_page; page++) {
+        uint8_t current_checksum = OLED_CalculateChecksum(page);
+        
+        // 只有校验码改变时才刷新该页
+        if(current_checksum != page_checksum[page]) {
+            // 设置页地址
+            SSD1315_WriteCmd(0xB0 + page);
+            // 设置列地址低位
+            SSD1315_WriteCmd(0x00 + (start_col & 0x0F));
+            // 设置列地址高位
+            SSD1315_WriteCmd(0x10 + ((start_col >> 4) & 0x0F));
+            
+            // 发送该页指定列范围的数据
+            SSD1315_WriteData(&display_ram[page][start_col], width);
+            
+            page_checksum[page] = current_checksum; // 更新校验码
+        }
+    }
+}
+
+/**
+  * @brief 标记指定页为需要刷新（手动设置校验码无效）
+  * @param page: 页号(0-7)
+  */
+void OLED_MarkPageDirty(uint8_t page) {
+    if(page < SSD1315_PAGES) {
+        page_checksum[page] = 0xFF; // 设置为无效值，下次必定刷新
+    }
+}
+
+/**
+  * @brief 标记所有页为需要刷新
+  * @param
+  */
+void OLED_MarkAllDirty(void) {
+    for(uint8_t i = 0; i < SSD1315_PAGES; i++) {
+        page_checksum[i] = 0xFF;
+    }
+}
+
+///**
+//  * @brief 初始化校验码数组
+//  * @param
+//  */
+//void OLED_Checksum_Init(void) {
+//    for(uint8_t i = 0; i < SSD1315_PAGES; i++) {
+//        page_checksum[i] = OLED_CalculateChecksum(i);
+//    }
+//}

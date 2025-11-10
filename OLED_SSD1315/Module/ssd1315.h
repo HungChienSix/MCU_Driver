@@ -31,6 +31,8 @@
 void OLED_Init(void);
 void OLED_DrawPixel (uint8_t x, uint8_t y, uint8_t SetPixel);
 void OLED_FillScreen(uint8_t SetPixel);
+void OLED_RefreshScreen_Force(void);
 void OLED_RefreshScreen(void);
+void OLED_RefreshArea(uint8_t start_page, uint8_t end_page, uint8_t start_col, uint8_t end_col);
 
 #endif
