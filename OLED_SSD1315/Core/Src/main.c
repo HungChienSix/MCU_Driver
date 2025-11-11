@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "crc.h"
 #include "i2c.h"
 #include "gpio.h"
 
@@ -90,6 +91,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
+  MX_CRC_Init();
   /* USER CODE BEGIN 2 */
 	OLED_Init();
 
@@ -99,20 +101,20 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		for(uint8_t x=0;x<=64;x++){
-			OLED_DrawPixel(2*x, x, 1);
-		}
-		OLED_RefreshScreen_Force();
+		//OLED_DrawLine(20,20,40,40,OLED_ON);
+		//OLED_DrawQuarterArc(20,20,5,0x06,OLED_ON);
+		//OLED_DrawQuarterSector(20,20,5,0x06,OLED_ON);
+		OLED_DrawString(0,0,"Hello",OLED_ON,&Font_8x16_consolas, 0);
+		OLED_RefreshScreen();
 		HAL_Delay(500);
-		OLED_FillScreen(0);
+		OLED_FillScreen(OLED_OFF);
 		
-		for(uint8_t x=0;x<=64;x++){
-			OLED_DrawPixel(x, x, 1);
-		}
-		OLED_RefreshScreen_Force();
-		//OLED_RefreshArea(0,1,20,100);
+		OLED_DrawLine(20,40,40,20,OLED_ON);
+		OLED_DrawRectangle(0,0,10,16,OLED_ON);
+		OLED_RefreshScreen();
 		HAL_Delay(500);
-		OLED_FillScreen(0);
+		OLED_FillScreen(OLED_OFF);
+		
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

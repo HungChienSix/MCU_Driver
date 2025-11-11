@@ -6,6 +6,9 @@
 
 #define SSD1315 
 
+#define OLED_ON  1
+#define OLED_OFF 0
+
 // IO pin
 #define SSD1315_I2C hi2c1
 
@@ -28,11 +31,17 @@
 // Color Inverse: 0xA6=NO, 0xA7=YES
 #define SSD1315_INVERSE     0xA6
 
+// If you do not use partition refresh, please comment out this macro definition.
+#define PartRefresh 
+
 void OLED_Init(void);
-void OLED_DrawPixel (uint8_t x, uint8_t y, uint8_t SetPixel);
+void OLED_DrawPixel (uint16_t x0, uint16_t y0, uint8_t SetPixel);
+void OLED_DrawHorizontalLine (int16_t x0, int16_t x1, int16_t y, uint8_t SetPixel);
+void OLED_FillArea  (uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t SetPixel);
 void OLED_FillScreen(uint8_t SetPixel);
-void OLED_RefreshScreen_Force(void);
 void OLED_RefreshScreen(void);
-void OLED_RefreshArea(uint8_t start_page, uint8_t end_page, uint8_t start_col, uint8_t end_col);
+void OLED_RefreshScreen_Force(void);
+
+//void OLED_RefreshArea(uint8_t start_page, uint8_t end_page, uint8_t start_col, uint8_t end_col);
 
 #endif
