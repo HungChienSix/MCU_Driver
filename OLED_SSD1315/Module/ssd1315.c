@@ -65,6 +65,29 @@ void OLED_Init(void){
 }
 
 /**
+ * @brief 在缓冲区读取像素点状态
+ * @param x: X坐标(0-127)
+ * @param y: Y坐标(0-63)
+ * @return 像素状态: 1=点亮, 0=熄灭, 0xFF=坐标无效
+ */
+uint8_t OLED_ReadPixel(uint16_t x, uint16_t y) {
+    // 参数边界检查
+    if (x >= SSD1315_WIDTH || y >= SSD1315_HEIGHT) {
+        return 0xFF; // 返回错误值
+    }
+    
+    uint8_t page = y >> 3;  // y / 8
+    uint8_t bit_mask = 1 << (y & 0x07); // y % 8
+    
+    // 读取像素状态
+    if (display_ram[page][x] & bit_mask) {
+        return 1; // 像素点亮
+    } else {
+        return 0; // 像素熄灭
+    }
+}
+
+/**
 	* @brief 在缓冲区绘制像素点
   * @param x: X坐标, y: Y坐标, SetPixel: 填充值
   */

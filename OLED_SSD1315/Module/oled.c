@@ -155,17 +155,17 @@ void OLED_DrawQuarterSector(uint16_t x0, uint16_t y0, uint16_t r, uint8_t quadra
  * @brief 绘制字符
  * @note  坐标 (x, y) = (水平, 垂直)
  */
-void OLED_DrawChar(uint16_t x, uint16_t y, char ch, uint8_t SetPixel, const struFont *font, uint8_t type){
+void OLED_DrawChar(uint16_t x, uint16_t y, char ch, uint8_t SetPixel, const struFont *font, uint8_t type){	
 	uint8_t char_index = ch - ' ';
 	const uint8_t *char_data ;
 	switch(type){
-		case(0):char_data = font->data_n + char_index * font->height * font->bytes_per_row;
+		case(FONT_Regular):char_data = font->Font_Regular + char_index * font->height * font->bytes_per_row;
 			break;
-		case(1):char_data = font->data_i + char_index * font->height * font->bytes_per_row;
+		case(FONT_Italic):char_data = font->Font_Italic + char_index * font->height * font->bytes_per_row;
 			break;
-		case(2):char_data = font->data_b + char_index * font->height * font->bytes_per_row;
+		case(FONT_Bold):char_data = font->Font_Bold + char_index * font->height * font->bytes_per_row;
 			break;
-		case(3):char_data = font->data_u + char_index * font->height * font->bytes_per_row;
+		case(FONT_Under):char_data = font->Font_Under + char_index * font->height * font->bytes_per_row;
 			break;
 	}
 
@@ -228,10 +228,69 @@ void OLED_DrawString(uint16_t x, uint16_t y, const char *str, uint8_t SetPixel, 
 }
 
 /**
-  * @brief 绘制图像 
-  * @note  
-	* @note  坐标 (x, y) = (水平, 垂直)
-	*/
-void ST7735_DrawImage(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint8_t *image){
-	
+ * @brief 绘制单色位图图像(使用OLED_DrawPixel)
+ * @param x: 图像左上角X坐标
+ * @param y: 图像左上角Y坐标
+ * @param width: 图像宽度(像素)
+ * @param height: 图像高度(像素)
+ * @param image: 图像数据指针
+ * @param mode: 绘制模式
+ */
+void OLED_DrawImage(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint8_t *image, uint8_t mode) {
+    // 参数边界检查
+    if (x >= SSD1315_WIDTH || y >= SSD1315_HEIGHT) return;
+    
+    // 计算每行字节数(宽度向上取整到8的倍数)
+    uint16_t bytes_per_line = (width + 7) / 8;
+    
+    for (uint16_t row = 0; row < height; row++) {
+        // 检查行是否在屏幕范围内
+        uint16_t current_y = y + row;
+        if (current_y >= SSD1315_HEIGHT) break;
+        
+        for (uint16_t col = 0; col < width; col++) {
+            // 检查列是否在屏幕范围内
+            uint16_t current_x = x + col;
+            if (current_x >= SSD1315_WIDTH) break;
+            
+            // 计算字节和位位置
+            uint16_t byte_index = row * bytes_per_line + (col / 8);
+            uint8_t bit_index = 7 - (col % 8); // 通常位图数据是MSB在前
+            
+            uint8_t pixel_value = (image[byte_index] >> bit_index) & 0x01;
+            
+            // 根据绘制模式处理像素
+            switch (mode) {
+                case 0: // 正常模式: 1绘制,0透明
+                    if (pixel_value) {
+                        OLED_DrawPixel(current_x, current_y, OLED_ON);
+                    }
+                    break;
+                    
+                case 1: // 反色模式: 0绘制,1透明
+                    if (!pixel_value) {
+                        OLED_DrawPixel(current_x, current_y, OLED_ON);
+                    }
+                    break;
+                    
+                case 2: // 覆盖模式: 1绘制,0清除
+                    if (pixel_value) {
+                        OLED_DrawPixel(current_x, current_y, OLED_ON);
+                    } else {
+                        OLED_DrawPixel(current_x, current_y, OLED_OFF);
+                    }
+                    break;
+                    
+                case 3: // 异或模式
+                    if (pixel_value) {
+                        // 获取当前像素状态进行异或
+                        uint8_t page = current_y >> 3;
+                        uint8_t bit_mask = 1 << (current_y & 0x07);
+                        uint8_t current_state = OLED_ReadPixel(current_x, current_y);
+                        OLED_DrawPixel(current_x, current_y, !current_state);
+                    }
+                    break;
+            }
+        }
+    }
 }

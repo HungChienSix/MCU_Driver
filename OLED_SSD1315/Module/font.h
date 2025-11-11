@@ -14,10 +14,10 @@ typedef struct {
   const uint8_t bytes_per_row;  // 每行字节数，可以预计算
   const uint8_t bit_order;      // 位顺序：0=高位在前，1=低位在前
 	
-	const uint8_t *data_n;
-	const uint8_t *data_i;
-	const uint8_t *data_b;
-	const uint8_t *data_u;
+	const uint8_t *Font_Regular;
+	const uint8_t *Font_Italic;
+	const uint8_t *Font_Bold;
+	const uint8_t *Font_Under;
 } struFont;
 
 #endif

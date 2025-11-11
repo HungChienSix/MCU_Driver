@@ -105,6 +105,7 @@ int main(void)
 		//OLED_DrawQuarterArc(20,20,5,0x06,OLED_ON);
 		//OLED_DrawQuarterSector(20,20,5,0x06,OLED_ON);
 		OLED_DrawString(0,0,"Hello",OLED_ON,&Font_8x16_consolas, 0);
+		//OLED_DrawImage(0,0,64,64,(uint8_t*)gImage_saber0_bin,IMG_Normal);
 		OLED_RefreshScreen();
 		HAL_Delay(500);
 		OLED_FillScreen(OLED_OFF);

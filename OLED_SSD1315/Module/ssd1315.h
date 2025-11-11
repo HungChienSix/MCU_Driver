@@ -35,6 +35,7 @@
 #define PartRefresh 
 
 void OLED_Init(void);
+uint8_t OLED_ReadPixel (uint16_t x0, uint16_t y0);
 void OLED_DrawPixel (uint16_t x0, uint16_t y0, uint8_t SetPixel);
 void OLED_DrawHorizontalLine (int16_t x0, int16_t x1, int16_t y, uint8_t SetPixel);
 void OLED_FillArea  (uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t SetPixel);
