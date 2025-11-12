@@ -155,19 +155,21 @@ void OLED_DrawQuarterSector(uint16_t x0, uint16_t y0, uint16_t r, uint8_t quadra
  * @brief 绘制字符
  * @note  坐标 (x, y) = (水平, 垂直)
  */
-void OLED_DrawChar(uint16_t x, uint16_t y, char ch, uint8_t SetPixel, const struFont *font, uint8_t type){	
+void OLED_DrawChar(uint16_t x, uint16_t y, char ch, const struFont *font, uint8_t type, uint8_t mode){	
 	uint8_t char_index = ch - ' ';
 	const uint8_t *char_data ;
+	const uint8_t *font_type ;
 	switch(type){
-		case(FONT_Regular):char_data = font->Font_Regular + char_index * font->height * font->bytes_per_row;
+		case(FONT_Regular):font_type = font->Font_Regular ;
 			break;
-		case(FONT_Italic):char_data = font->Font_Italic + char_index * font->height * font->bytes_per_row;
+		case(FONT_Italic) :font_type = font->Font_Italic  ;
 			break;
-		case(FONT_Bold):char_data = font->Font_Bold + char_index * font->height * font->bytes_per_row;
+		case(FONT_Bold)   :font_type = font->Font_Bold    ;
 			break;
-		case(FONT_Under):char_data = font->Font_Under + char_index * font->height * font->bytes_per_row;
+		case(FONT_Under)  :font_type = font->Font_Under   ;
 			break;
 	}
+	char_data = font_type + char_index * font->height * font->bytes_per_row;
 
 	for(uint8_t row = 0; row < font->height; row++) // 垂直
 	{
@@ -185,11 +187,43 @@ void OLED_DrawChar(uint16_t x, uint16_t y, char ch, uint8_t SetPixel, const stru
 				// 低位在前（LSB first）
 				pixel_set = current_byte & (0x01 << bit_index);
 			}
-	
-			if(pixel_set)
-			{
-				OLED_DrawPixel(x + col, y + row, SetPixel);
-			}
+			
+			
+			
+//			switch(mode){
+//				case 0:{
+//					if(pixel_set){
+//						OLED_DrawPixel(x + col, y + row, OLED_ON);
+//					}
+//					break;
+//				}
+//				case 1:{
+//					if(pixel_set){
+//						OLED_DrawPixel(x + col, y + row, OLED_OFF);
+//					}
+//					break;
+//				}
+//				case 2:{
+//					if(pixel_set){
+//						OLED_DrawPixel(x + col, y + row, OLED_ON);
+//					}
+//					else{
+//						OLED_DrawPixel(x + col, y + row, OLED_OFF);
+//					}
+//					break;
+//				}
+//				case 3:{
+//					if(pixel_set){
+//						if(OLED_ReadPixel(x + col, y + row) == 0){
+//							OLED_DrawPixel(x + col, y + row, OLED_ON);
+//						}
+//						else if(OLED_ReadPixel(x + col, y + row) == 1){
+//							OLED_DrawPixel(x + col, y + row, OLED_OFF);
+//						}
+//					}
+//					break;
+//				}
+//			}
 		}
 	}
 }
@@ -198,7 +232,7 @@ void OLED_DrawChar(uint16_t x, uint16_t y, char ch, uint8_t SetPixel, const stru
  * @brief 绘制字符串
  * @note  坐标 (x, y) = (水平, 垂直)
  */
-void OLED_DrawString(uint16_t x, uint16_t y, const char *str, uint8_t SetPixel, const struFont *font, uint8_t type)
+void OLED_DrawString(uint16_t x, uint16_t y, const char *str, const struFont *font, uint8_t type, uint8_t mode)
 {
     // 修正坐标系
 	uint16_t current_x = x;
@@ -206,7 +240,7 @@ void OLED_DrawString(uint16_t x, uint16_t y, const char *str, uint8_t SetPixel, 
 	
 	while(*str != '\0')
 	{
-		OLED_DrawChar(current_x, current_y, *str, SetPixel, font, type);
+		OLED_DrawChar(current_x, current_y, *str, font, type, mode);
 		
 		// 水平前进
 		current_x += font->width;
@@ -257,40 +291,43 @@ void OLED_DrawImage(uint16_t x, uint16_t y, uint16_t width, uint16_t height, con
             uint16_t byte_index = row * bytes_per_line + (col / 8);
             uint8_t bit_index = 7 - (col % 8); // 通常位图数据是MSB在前
             
-            uint8_t pixel_value = (image[byte_index] >> bit_index) & 0x01;
+            uint8_t pixel_set = (image[byte_index] >> bit_index) & 0x01;
             
             // 根据绘制模式处理像素
-            switch (mode) {
-                case 0: // 正常模式: 1绘制,0透明
-                    if (pixel_value) {
-                        OLED_DrawPixel(current_x, current_y, OLED_ON);
-                    }
-                    break;
-                    
-                case 1: // 反色模式: 0绘制,1透明
-                    if (!pixel_value) {
-                        OLED_DrawPixel(current_x, current_y, OLED_ON);
-                    }
-                    break;
-                    
-                case 2: // 覆盖模式: 1绘制,0清除
-                    if (pixel_value) {
-                        OLED_DrawPixel(current_x, current_y, OLED_ON);
-                    } else {
-                        OLED_DrawPixel(current_x, current_y, OLED_OFF);
-                    }
-                    break;
-                    
-                case 3: // 异或模式
-                    if (pixel_value) {
-                        // 获取当前像素状态进行异或
-                        uint8_t page = current_y >> 3;
-                        uint8_t bit_mask = 1 << (current_y & 0x07);
-                        uint8_t current_state = OLED_ReadPixel(current_x, current_y);
-                        OLED_DrawPixel(current_x, current_y, !current_state);
-                    }
-                    break;
-            }
+						switch(mode){
+						case 0:{
+							if(pixel_set){
+								OLED_DrawPixel(x + col, y + row, OLED_ON);
+							}
+							break;
+						}
+						case 2:{
+							if(pixel_set){
+								OLED_DrawPixel(x + col, y + row, OLED_OFF);
+							}
+							break;
+						}
+						case 3:{
+							if(pixel_set){
+								OLED_DrawPixel(x + col, y + row, OLED_ON);
+							}
+							else{
+								OLED_DrawPixel(x + col, y + row, OLED_OFF);
+							}
+							break;
+						}
+						case 4:{
+							if(pixel_set){
+								if(OLED_ReadPixel(x + col, y + row) == 0){
+									OLED_DrawPixel(x + col, y + row, OLED_ON);
+								}
+								else if(OLED_ReadPixel(x + col, y + row) == 1){
+									OLED_DrawPixel(x + col, y + row, OLED_OFF);
+								}
+							}
+							break;
+						}
+					}
         }
     }
 }

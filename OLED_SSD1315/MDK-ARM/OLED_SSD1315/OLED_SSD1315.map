@@ -30,6 +30,7 @@ Section Cross References
     main.o(.text.main) refers to crc.o(.text.MX_CRC_Init) for MX_CRC_Init
     main.o(.text.main) refers to ssd1315.o(.text.OLED_Init) for OLED_Init
     main.o(.text.main) refers to font.o(.data.Font_8x16_consolas) for Font_8x16_consolas
+    main.o(.text.main) refers to ssd1315.o(.text.OLED_FillArea) for OLED_FillArea
     main.o(.text.main) refers to oled.o(.text.OLED_DrawString) for OLED_DrawString
     main.o(.text.main) refers to ssd1315.o(.text.OLED_RefreshScreen) for OLED_RefreshScreen
     main.o(.text.main) refers to stm32f4xx_hal.o(.text.HAL_Delay) for HAL_Delay
@@ -516,6 +517,7 @@ Section Cross References
     oled.o(.text.OLED_DrawQuarterSector) refers to ssd1315.o(.text.OLED_DrawHorizontalLine) for OLED_DrawHorizontalLine
     oled.o(.ARM.exidx.text.OLED_DrawQuarterSector) refers to oled.o(.text.OLED_DrawQuarterSector) for [Anonymous Symbol]
     oled.o(.text.OLED_DrawChar) refers to ssd1315.o(.text.OLED_DrawPixel) for OLED_DrawPixel
+    oled.o(.text.OLED_DrawChar) refers to ssd1315.o(.text.OLED_ReadPixel) for OLED_ReadPixel
     oled.o(.ARM.exidx.text.OLED_DrawChar) refers to oled.o(.text.OLED_DrawChar) for [Anonymous Symbol]
     oled.o(.text.OLED_DrawString) refers to oled.o(.text.OLED_DrawChar) for OLED_DrawChar
     oled.o(.ARM.exidx.text.OLED_DrawString) refers to oled.o(.text.OLED_DrawString) for [Anonymous Symbol]
@@ -1163,7 +1165,7 @@ Removing Unused input sections from the image.
     Removing oled.o(.ARM.exidx.text.OLED_DrawQuarterSector), (8 bytes).
     Removing oled.o(.ARM.exidx.text.OLED_DrawChar), (8 bytes).
     Removing oled.o(.ARM.exidx.text.OLED_DrawString), (8 bytes).
-    Removing oled.o(.text.OLED_DrawImage), (210 bytes).
+    Removing oled.o(.text.OLED_DrawImage), (230 bytes).
     Removing oled.o(.ARM.exidx.text.OLED_DrawImage), (8 bytes).
     Removing ssd1315.o(.text), (0 bytes).
     Removing ssd1315.o(.text.SSD1315_SetRotation), (132 bytes).
@@ -1171,18 +1173,17 @@ Removing Unused input sections from the image.
     Removing ssd1315.o(.ARM.exidx.text.OLED_Init), (8 bytes).
     Removing ssd1315.o(.ARM.exidx.text.OLED_FillScreen), (8 bytes).
     Removing ssd1315.o(.ARM.exidx.text.OLED_RefreshScreen_Force), (8 bytes).
-    Removing ssd1315.o(.text.OLED_ReadPixel), (50 bytes).
     Removing ssd1315.o(.ARM.exidx.text.OLED_ReadPixel), (8 bytes).
     Removing ssd1315.o(.ARM.exidx.text.OLED_DrawPixel), (8 bytes).
     Removing ssd1315.o(.text.OLED_DrawHorizontalLine), (240 bytes).
     Removing ssd1315.o(.ARM.exidx.text.OLED_DrawHorizontalLine), (8 bytes).
-    Removing ssd1315.o(.text.OLED_FillArea), (292 bytes).
     Removing ssd1315.o(.ARM.exidx.text.OLED_FillArea), (8 bytes).
     Removing ssd1315.o(.text.OLED_CalculateChecksum), (244 bytes).
     Removing ssd1315.o(.ARM.exidx.text.OLED_CalculateChecksum), (8 bytes).
     Removing ssd1315.o(.ARM.exidx.text.OLED_RefreshScreen), (8 bytes).
+    Removing oled_ui.o(.text), (0 bytes).
 
-508 unused section(s) (total 30450 bytes) removed from the image.
+507 unused section(s) (total 30128 bytes) removed from the image.
 
 ==============================================================================
 
@@ -1258,6 +1259,7 @@ Image Symbol Table
     i2c.c                                    0x00000000   Number         0  i2c.o ABSOLUTE
     main.c                                   0x00000000   Number         0  main.o ABSOLUTE
     oled.c                                   0x00000000   Number         0  oled.o ABSOLUTE
+    oled_ui.c                                0x00000000   Number         0  oled_ui.o ABSOLUTE
     ssd1315.c                                0x00000000   Number         0  ssd1315.o ABSOLUTE
     startup_stm32f401xc.s                    0x00000000   Number         0  startup_stm32f401xc.o ABSOLUTE
     stm32f4xx_hal.c                          0x00000000   Number         0  stm32f4xx_hal.o ABSOLUTE
@@ -1378,23 +1380,25 @@ Image Symbol Table
     [Anonymous Symbol]                       0x080016a0   Section        0  stm32f4xx_it.o(.text.MemManage_Handler)
     [Anonymous Symbol]                       0x080016a4   Section        0  stm32f4xx_it.o(.text.NMI_Handler)
     [Anonymous Symbol]                       0x080016a8   Section        0  oled.o(.text.OLED_DrawChar)
-    [Anonymous Symbol]                       0x0800178c   Section        0  oled.o(.text.OLED_DrawLine)
-    [Anonymous Symbol]                       0x08001838   Section        0  ssd1315.o(.text.OLED_DrawPixel)
-    [Anonymous Symbol]                       0x08001870   Section        0  oled.o(.text.OLED_DrawRectangle)
-    [Anonymous Symbol]                       0x080018cc   Section        0  oled.o(.text.OLED_DrawString)
-    [Anonymous Symbol]                       0x08001920   Section        0  ssd1315.o(.text.OLED_FillScreen)
-    [Anonymous Symbol]                       0x0800193c   Section        0  ssd1315.o(.text.OLED_Init)
-    [Anonymous Symbol]                       0x08001bfc   Section        0  ssd1315.o(.text.OLED_RefreshScreen)
-    [Anonymous Symbol]                       0x08001d68   Section        0  ssd1315.o(.text.OLED_RefreshScreen_Force)
-    [Anonymous Symbol]                       0x08001f24   Section        0  stm32f4xx_it.o(.text.PendSV_Handler)
-    [Anonymous Symbol]                       0x08001f28   Section        0  stm32f4xx_it.o(.text.SVC_Handler)
-    [Anonymous Symbol]                       0x08001f2c   Section        0  stm32f4xx_it.o(.text.SysTick_Handler)
-    [Anonymous Symbol]                       0x08001f30   Section        0  main.o(.text.SystemClock_Config)
-    [Anonymous Symbol]                       0x08001fd8   Section        0  system_stm32f4xx.o(.text.SystemInit)
-    [Anonymous Symbol]                       0x08001fec   Section        0  stm32f4xx_it.o(.text.UsageFault_Handler)
-    [Anonymous Symbol]                       0x08001ff0   Section        0  main.o(.text.main)
-    $v0                                      0x08002074   Number         0  fpinit.o(x$fpl$fpinit)
-    x$fpl$fpinit                             0x08002074   Section       26  fpinit.o(x$fpl$fpinit)
+    [Anonymous Symbol]                       0x080017c8   Section        0  oled.o(.text.OLED_DrawLine)
+    [Anonymous Symbol]                       0x08001874   Section        0  ssd1315.o(.text.OLED_DrawPixel)
+    [Anonymous Symbol]                       0x080018ac   Section        0  oled.o(.text.OLED_DrawRectangle)
+    [Anonymous Symbol]                       0x08001908   Section        0  oled.o(.text.OLED_DrawString)
+    [Anonymous Symbol]                       0x0800195c   Section        0  ssd1315.o(.text.OLED_FillArea)
+    [Anonymous Symbol]                       0x08001a80   Section        0  ssd1315.o(.text.OLED_FillScreen)
+    [Anonymous Symbol]                       0x08001a9c   Section        0  ssd1315.o(.text.OLED_Init)
+    [Anonymous Symbol]                       0x08001d5c   Section        0  ssd1315.o(.text.OLED_ReadPixel)
+    [Anonymous Symbol]                       0x08001d90   Section        0  ssd1315.o(.text.OLED_RefreshScreen)
+    [Anonymous Symbol]                       0x08001efc   Section        0  ssd1315.o(.text.OLED_RefreshScreen_Force)
+    [Anonymous Symbol]                       0x080020b8   Section        0  stm32f4xx_it.o(.text.PendSV_Handler)
+    [Anonymous Symbol]                       0x080020bc   Section        0  stm32f4xx_it.o(.text.SVC_Handler)
+    [Anonymous Symbol]                       0x080020c0   Section        0  stm32f4xx_it.o(.text.SysTick_Handler)
+    [Anonymous Symbol]                       0x080020c4   Section        0  main.o(.text.SystemClock_Config)
+    [Anonymous Symbol]                       0x0800216c   Section        0  system_stm32f4xx.o(.text.SystemInit)
+    [Anonymous Symbol]                       0x08002180   Section        0  stm32f4xx_it.o(.text.UsageFault_Handler)
+    [Anonymous Symbol]                       0x08002184   Section        0  main.o(.text.main)
+    $v0                                      0x08002218   Number         0  fpinit.o(x$fpl$fpinit)
+    x$fpl$fpinit                             0x08002218   Section       26  fpinit.o(x$fpl$fpinit)
     .L_MergedGlobals                         0x20000000   Data           8  stm32f4xx_hal.o(.data..L_MergedGlobals)
     [Anonymous Symbol]                       0x20000000   Section        0  stm32f4xx_hal.o(.data..L_MergedGlobals)
     .bss                                     0x20000020   Section       96  libspace.o(.bss)
@@ -1599,33 +1603,35 @@ Image Symbol Table
     MX_I2C1_Init                             0x0800165d   Thumb Code    66  i2c.o(.text.MX_I2C1_Init)
     MemManage_Handler                        0x080016a1   Thumb Code     2  stm32f4xx_it.o(.text.MemManage_Handler)
     NMI_Handler                              0x080016a5   Thumb Code     2  stm32f4xx_it.o(.text.NMI_Handler)
-    OLED_DrawChar                            0x080016a9   Thumb Code   226  oled.o(.text.OLED_DrawChar)
-    OLED_DrawLine                            0x0800178d   Thumb Code   170  oled.o(.text.OLED_DrawLine)
-    OLED_DrawPixel                           0x08001839   Thumb Code    56  ssd1315.o(.text.OLED_DrawPixel)
-    OLED_DrawRectangle                       0x08001871   Thumb Code    92  oled.o(.text.OLED_DrawRectangle)
-    OLED_DrawString                          0x080018cd   Thumb Code    82  oled.o(.text.OLED_DrawString)
-    OLED_FillScreen                          0x08001921   Thumb Code    28  ssd1315.o(.text.OLED_FillScreen)
-    OLED_Init                                0x0800193d   Thumb Code   702  ssd1315.o(.text.OLED_Init)
-    OLED_RefreshScreen                       0x08001bfd   Thumb Code   362  ssd1315.o(.text.OLED_RefreshScreen)
-    OLED_RefreshScreen_Force                 0x08001d69   Thumb Code   442  ssd1315.o(.text.OLED_RefreshScreen_Force)
-    PendSV_Handler                           0x08001f25   Thumb Code     2  stm32f4xx_it.o(.text.PendSV_Handler)
-    SVC_Handler                              0x08001f29   Thumb Code     2  stm32f4xx_it.o(.text.SVC_Handler)
-    SysTick_Handler                          0x08001f2d   Thumb Code     4  stm32f4xx_it.o(.text.SysTick_Handler)
-    SystemClock_Config                       0x08001f31   Thumb Code   168  main.o(.text.SystemClock_Config)
-    SystemInit                               0x08001fd9   Thumb Code    18  system_stm32f4xx.o(.text.SystemInit)
-    UsageFault_Handler                       0x08001fed   Thumb Code     2  stm32f4xx_it.o(.text.UsageFault_Handler)
-    main                                     0x08001ff1   Thumb Code   124  main.o(.text.main)
-    _fp_init                                 0x08002075   Thumb Code    26  fpinit.o(x$fpl$fpinit)
-    __fplib_config_fpu_vfp                   0x0800208d   Thumb Code     0  fpinit.o(x$fpl$fpinit)
-    __fplib_config_pureend_doubles           0x0800208d   Thumb Code     0  fpinit.o(x$fpl$fpinit)
-    AHBPrescTable                            0x0800208e   Data          16  system_stm32f4xx.o(.rodata.AHBPrescTable)
-    APBPrescTable                            0x0800209e   Data           8  system_stm32f4xx.o(.rodata.APBPrescTable)
-    Font_8x16_consolas_b_data                0x080020a6   Data        1536  font.o(.rodata.Font_8x16_consolas_b_data)
-    Font_8x16_consolas_data                  0x080026a6   Data        1536  font.o(.rodata.Font_8x16_consolas_data)
-    Font_8x16_consolas_i_data                0x08002ca6   Data        1536  font.o(.rodata.Font_8x16_consolas_i_data)
-    Font_8x16_consolas_u_data                0x080032a6   Data        1536  font.o(.rodata.Font_8x16_consolas_u_data)
-    Region$$Table$$Base                      0x080038a8   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x080038c8   Number         0  anon$$obj.o(Region$$Table)
+    OLED_DrawChar                            0x080016a9   Thumb Code   286  oled.o(.text.OLED_DrawChar)
+    OLED_DrawLine                            0x080017c9   Thumb Code   170  oled.o(.text.OLED_DrawLine)
+    OLED_DrawPixel                           0x08001875   Thumb Code    56  ssd1315.o(.text.OLED_DrawPixel)
+    OLED_DrawRectangle                       0x080018ad   Thumb Code    92  oled.o(.text.OLED_DrawRectangle)
+    OLED_DrawString                          0x08001909   Thumb Code    82  oled.o(.text.OLED_DrawString)
+    OLED_FillArea                            0x0800195d   Thumb Code   292  ssd1315.o(.text.OLED_FillArea)
+    OLED_FillScreen                          0x08001a81   Thumb Code    28  ssd1315.o(.text.OLED_FillScreen)
+    OLED_Init                                0x08001a9d   Thumb Code   702  ssd1315.o(.text.OLED_Init)
+    OLED_ReadPixel                           0x08001d5d   Thumb Code    50  ssd1315.o(.text.OLED_ReadPixel)
+    OLED_RefreshScreen                       0x08001d91   Thumb Code   362  ssd1315.o(.text.OLED_RefreshScreen)
+    OLED_RefreshScreen_Force                 0x08001efd   Thumb Code   442  ssd1315.o(.text.OLED_RefreshScreen_Force)
+    PendSV_Handler                           0x080020b9   Thumb Code     2  stm32f4xx_it.o(.text.PendSV_Handler)
+    SVC_Handler                              0x080020bd   Thumb Code     2  stm32f4xx_it.o(.text.SVC_Handler)
+    SysTick_Handler                          0x080020c1   Thumb Code     4  stm32f4xx_it.o(.text.SysTick_Handler)
+    SystemClock_Config                       0x080020c5   Thumb Code   168  main.o(.text.SystemClock_Config)
+    SystemInit                               0x0800216d   Thumb Code    18  system_stm32f4xx.o(.text.SystemInit)
+    UsageFault_Handler                       0x08002181   Thumb Code     2  stm32f4xx_it.o(.text.UsageFault_Handler)
+    main                                     0x08002185   Thumb Code   140  main.o(.text.main)
+    _fp_init                                 0x08002219   Thumb Code    26  fpinit.o(x$fpl$fpinit)
+    __fplib_config_fpu_vfp                   0x08002231   Thumb Code     0  fpinit.o(x$fpl$fpinit)
+    __fplib_config_pureend_doubles           0x08002231   Thumb Code     0  fpinit.o(x$fpl$fpinit)
+    AHBPrescTable                            0x08002232   Data          16  system_stm32f4xx.o(.rodata.AHBPrescTable)
+    APBPrescTable                            0x08002242   Data           8  system_stm32f4xx.o(.rodata.APBPrescTable)
+    Font_8x16_consolas_b_data                0x0800224a   Data        1536  font.o(.rodata.Font_8x16_consolas_b_data)
+    Font_8x16_consolas_data                  0x0800284a   Data        1536  font.o(.rodata.Font_8x16_consolas_data)
+    Font_8x16_consolas_i_data                0x08002e4a   Data        1536  font.o(.rodata.Font_8x16_consolas_i_data)
+    Font_8x16_consolas_u_data                0x0800344a   Data        1536  font.o(.rodata.Font_8x16_consolas_u_data)
+    Region$$Table$$Base                      0x08003a4c   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x08003a6c   Number         0  anon$$obj.o(Region$$Table)
     uwTickFreq                               0x20000000   Data           1  stm32f4xx_hal.o(.data..L_MergedGlobals)
     uwTickPrio                               0x20000004   Data           4  stm32f4xx_hal.o(.data..L_MergedGlobals)
     Font_8x16_consolas                       0x20000008   Data          20  font.o(.data.Font_8x16_consolas)
@@ -1645,74 +1651,74 @@ Memory Map of the image
 
   Image Entry point : 0x08000195
 
-  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x000038e8, Max: 0x00040000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00003a90, Max: 0x00040000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x000038c8, Max: 0x00040000, ABSOLUTE)
+    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00003a6c, Max: 0x00040000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x08000000   0x08000000   0x00000194   Data   RO            3    RESET               startup_stm32f401xc.o
-    0x08000194   0x08000194   0x00000008   Code   RO          757  * !!!main             c_w.l(__main.o)
-    0x0800019c   0x0800019c   0x0000005c   Code   RO          932    !!!scatter          c_w.l(__scatter.o)
-    0x080001f8   0x080001f8   0x0000001a   Code   RO          936    !!handler_copy      c_w.l(__scatter_copy.o)
+    0x08000194   0x08000194   0x00000008   Code   RO          758  * !!!main             c_w.l(__main.o)
+    0x0800019c   0x0800019c   0x0000005c   Code   RO          933    !!!scatter          c_w.l(__scatter.o)
+    0x080001f8   0x080001f8   0x0000001a   Code   RO          937    !!handler_copy      c_w.l(__scatter_copy.o)
     0x08000212   0x08000212   0x00000002   PAD
-    0x08000214   0x08000214   0x00000002   Code   RO          933    !!handler_null      c_w.l(__scatter.o)
+    0x08000214   0x08000214   0x00000002   Code   RO          934    !!handler_null      c_w.l(__scatter.o)
     0x08000216   0x08000216   0x00000002   PAD
-    0x08000218   0x08000218   0x0000001c   Code   RO          938    !!handler_zi        c_w.l(__scatter_zi.o)
-    0x08000234   0x08000234   0x00000002   Code   RO          794    .ARM.Collect$$libinit$$00000000  c_w.l(libinit.o)
-    0x08000236   0x08000236   0x00000004   Code   RO          806    .ARM.Collect$$libinit$$00000001  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000000   Code   RO          809    .ARM.Collect$$libinit$$00000004  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000000   Code   RO          811    .ARM.Collect$$libinit$$00000006  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000000   Code   RO          814    .ARM.Collect$$libinit$$0000000C  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000000   Code   RO          816    .ARM.Collect$$libinit$$0000000E  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000000   Code   RO          818    .ARM.Collect$$libinit$$00000010  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000000   Code   RO          821    .ARM.Collect$$libinit$$00000013  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000000   Code   RO          823    .ARM.Collect$$libinit$$00000015  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000000   Code   RO          825    .ARM.Collect$$libinit$$00000017  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000000   Code   RO          827    .ARM.Collect$$libinit$$00000019  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000000   Code   RO          829    .ARM.Collect$$libinit$$0000001B  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000000   Code   RO          831    .ARM.Collect$$libinit$$0000001D  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000000   Code   RO          833    .ARM.Collect$$libinit$$0000001F  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000000   Code   RO          835    .ARM.Collect$$libinit$$00000021  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000000   Code   RO          837    .ARM.Collect$$libinit$$00000023  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000000   Code   RO          839    .ARM.Collect$$libinit$$00000025  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000000   Code   RO          841    .ARM.Collect$$libinit$$00000027  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000000   Code   RO          845    .ARM.Collect$$libinit$$0000002E  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000000   Code   RO          847    .ARM.Collect$$libinit$$00000030  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000000   Code   RO          849    .ARM.Collect$$libinit$$00000032  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000000   Code   RO          851    .ARM.Collect$$libinit$$00000034  c_w.l(libinit2.o)
-    0x0800023a   0x0800023a   0x00000002   Code   RO          852    .ARM.Collect$$libinit$$00000035  c_w.l(libinit2.o)
-    0x0800023c   0x0800023c   0x00000002   Code   RO          887    .ARM.Collect$$libshutdown$$00000000  c_w.l(libshutdown.o)
-    0x0800023e   0x0800023e   0x00000000   Code   RO          915    .ARM.Collect$$libshutdown$$00000002  c_w.l(libshutdown2.o)
-    0x0800023e   0x0800023e   0x00000000   Code   RO          917    .ARM.Collect$$libshutdown$$00000004  c_w.l(libshutdown2.o)
-    0x0800023e   0x0800023e   0x00000000   Code   RO          920    .ARM.Collect$$libshutdown$$00000007  c_w.l(libshutdown2.o)
-    0x0800023e   0x0800023e   0x00000000   Code   RO          923    .ARM.Collect$$libshutdown$$0000000A  c_w.l(libshutdown2.o)
-    0x0800023e   0x0800023e   0x00000000   Code   RO          925    .ARM.Collect$$libshutdown$$0000000C  c_w.l(libshutdown2.o)
-    0x0800023e   0x0800023e   0x00000000   Code   RO          928    .ARM.Collect$$libshutdown$$0000000F  c_w.l(libshutdown2.o)
-    0x0800023e   0x0800023e   0x00000002   Code   RO          929    .ARM.Collect$$libshutdown$$00000010  c_w.l(libshutdown2.o)
-    0x08000240   0x08000240   0x00000000   Code   RO          759    .ARM.Collect$$rtentry$$00000000  c_w.l(__rtentry.o)
-    0x08000240   0x08000240   0x00000000   Code   RO          765    .ARM.Collect$$rtentry$$00000002  c_w.l(__rtentry2.o)
-    0x08000240   0x08000240   0x00000006   Code   RO          777    .ARM.Collect$$rtentry$$00000004  c_w.l(__rtentry4.o)
-    0x08000246   0x08000246   0x00000000   Code   RO          767    .ARM.Collect$$rtentry$$00000009  c_w.l(__rtentry2.o)
-    0x08000246   0x08000246   0x00000004   Code   RO          768    .ARM.Collect$$rtentry$$0000000A  c_w.l(__rtentry2.o)
-    0x0800024a   0x0800024a   0x00000000   Code   RO          770    .ARM.Collect$$rtentry$$0000000C  c_w.l(__rtentry2.o)
-    0x0800024a   0x0800024a   0x00000008   Code   RO          771    .ARM.Collect$$rtentry$$0000000D  c_w.l(__rtentry2.o)
-    0x08000252   0x08000252   0x00000002   Code   RO          798    .ARM.Collect$$rtexit$$00000000  c_w.l(rtexit.o)
-    0x08000254   0x08000254   0x00000000   Code   RO          858    .ARM.Collect$$rtexit$$00000002  c_w.l(rtexit2.o)
-    0x08000254   0x08000254   0x00000004   Code   RO          859    .ARM.Collect$$rtexit$$00000003  c_w.l(rtexit2.o)
-    0x08000258   0x08000258   0x00000006   Code   RO          860    .ARM.Collect$$rtexit$$00000004  c_w.l(rtexit2.o)
+    0x08000218   0x08000218   0x0000001c   Code   RO          939    !!handler_zi        c_w.l(__scatter_zi.o)
+    0x08000234   0x08000234   0x00000002   Code   RO          795    .ARM.Collect$$libinit$$00000000  c_w.l(libinit.o)
+    0x08000236   0x08000236   0x00000004   Code   RO          807    .ARM.Collect$$libinit$$00000001  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000000   Code   RO          810    .ARM.Collect$$libinit$$00000004  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000000   Code   RO          812    .ARM.Collect$$libinit$$00000006  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000000   Code   RO          815    .ARM.Collect$$libinit$$0000000C  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000000   Code   RO          817    .ARM.Collect$$libinit$$0000000E  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000000   Code   RO          819    .ARM.Collect$$libinit$$00000010  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000000   Code   RO          822    .ARM.Collect$$libinit$$00000013  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000000   Code   RO          824    .ARM.Collect$$libinit$$00000015  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000000   Code   RO          826    .ARM.Collect$$libinit$$00000017  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000000   Code   RO          828    .ARM.Collect$$libinit$$00000019  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000000   Code   RO          830    .ARM.Collect$$libinit$$0000001B  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000000   Code   RO          832    .ARM.Collect$$libinit$$0000001D  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000000   Code   RO          834    .ARM.Collect$$libinit$$0000001F  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000000   Code   RO          836    .ARM.Collect$$libinit$$00000021  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000000   Code   RO          838    .ARM.Collect$$libinit$$00000023  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000000   Code   RO          840    .ARM.Collect$$libinit$$00000025  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000000   Code   RO          842    .ARM.Collect$$libinit$$00000027  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000000   Code   RO          846    .ARM.Collect$$libinit$$0000002E  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000000   Code   RO          848    .ARM.Collect$$libinit$$00000030  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000000   Code   RO          850    .ARM.Collect$$libinit$$00000032  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000000   Code   RO          852    .ARM.Collect$$libinit$$00000034  c_w.l(libinit2.o)
+    0x0800023a   0x0800023a   0x00000002   Code   RO          853    .ARM.Collect$$libinit$$00000035  c_w.l(libinit2.o)
+    0x0800023c   0x0800023c   0x00000002   Code   RO          888    .ARM.Collect$$libshutdown$$00000000  c_w.l(libshutdown.o)
+    0x0800023e   0x0800023e   0x00000000   Code   RO          916    .ARM.Collect$$libshutdown$$00000002  c_w.l(libshutdown2.o)
+    0x0800023e   0x0800023e   0x00000000   Code   RO          918    .ARM.Collect$$libshutdown$$00000004  c_w.l(libshutdown2.o)
+    0x0800023e   0x0800023e   0x00000000   Code   RO          921    .ARM.Collect$$libshutdown$$00000007  c_w.l(libshutdown2.o)
+    0x0800023e   0x0800023e   0x00000000   Code   RO          924    .ARM.Collect$$libshutdown$$0000000A  c_w.l(libshutdown2.o)
+    0x0800023e   0x0800023e   0x00000000   Code   RO          926    .ARM.Collect$$libshutdown$$0000000C  c_w.l(libshutdown2.o)
+    0x0800023e   0x0800023e   0x00000000   Code   RO          929    .ARM.Collect$$libshutdown$$0000000F  c_w.l(libshutdown2.o)
+    0x0800023e   0x0800023e   0x00000002   Code   RO          930    .ARM.Collect$$libshutdown$$00000010  c_w.l(libshutdown2.o)
+    0x08000240   0x08000240   0x00000000   Code   RO          760    .ARM.Collect$$rtentry$$00000000  c_w.l(__rtentry.o)
+    0x08000240   0x08000240   0x00000000   Code   RO          766    .ARM.Collect$$rtentry$$00000002  c_w.l(__rtentry2.o)
+    0x08000240   0x08000240   0x00000006   Code   RO          778    .ARM.Collect$$rtentry$$00000004  c_w.l(__rtentry4.o)
+    0x08000246   0x08000246   0x00000000   Code   RO          768    .ARM.Collect$$rtentry$$00000009  c_w.l(__rtentry2.o)
+    0x08000246   0x08000246   0x00000004   Code   RO          769    .ARM.Collect$$rtentry$$0000000A  c_w.l(__rtentry2.o)
+    0x0800024a   0x0800024a   0x00000000   Code   RO          771    .ARM.Collect$$rtentry$$0000000C  c_w.l(__rtentry2.o)
+    0x0800024a   0x0800024a   0x00000008   Code   RO          772    .ARM.Collect$$rtentry$$0000000D  c_w.l(__rtentry2.o)
+    0x08000252   0x08000252   0x00000002   Code   RO          799    .ARM.Collect$$rtexit$$00000000  c_w.l(rtexit.o)
+    0x08000254   0x08000254   0x00000000   Code   RO          859    .ARM.Collect$$rtexit$$00000002  c_w.l(rtexit2.o)
+    0x08000254   0x08000254   0x00000004   Code   RO          860    .ARM.Collect$$rtexit$$00000003  c_w.l(rtexit2.o)
+    0x08000258   0x08000258   0x00000006   Code   RO          861    .ARM.Collect$$rtexit$$00000004  c_w.l(rtexit2.o)
     0x0800025e   0x0800025e   0x00000002   PAD
     0x08000260   0x08000260   0x00000040   Code   RO            4    .text               startup_stm32f401xc.o
-    0x080002a0   0x080002a0   0x000000f0   Code   RO          749    .text               c_w.l(lludivv7m.o)
-    0x08000390   0x08000390   0x00000010   Code   RO          751    .text               c_w.l(aeabi_memset4.o)
-    0x080003a0   0x080003a0   0x0000004e   Code   RO          753    .text               c_w.l(rt_memclr_w.o)
-    0x080003ee   0x080003ee   0x00000006   Code   RO          755    .text               c_w.l(heapauxi.o)
-    0x080003f4   0x080003f4   0x0000004a   Code   RO          781    .text               c_w.l(sys_stackheap_outer.o)
-    0x0800043e   0x0800043e   0x00000012   Code   RO          783    .text               c_w.l(exit.o)
-    0x08000450   0x08000450   0x00000008   Code   RO          795    .text               c_w.l(libspace.o)
-    0x08000458   0x08000458   0x0000000c   Code   RO          853    .text               c_w.l(sys_exit.o)
-    0x08000464   0x08000464   0x00000002   Code   RO          876    .text               c_w.l(use_no_semi.o)
-    0x08000466   0x08000466   0x00000000   Code   RO          878    .text               c_w.l(indicate_semi.o)
+    0x080002a0   0x080002a0   0x000000f0   Code   RO          750    .text               c_w.l(lludivv7m.o)
+    0x08000390   0x08000390   0x00000010   Code   RO          752    .text               c_w.l(aeabi_memset4.o)
+    0x080003a0   0x080003a0   0x0000004e   Code   RO          754    .text               c_w.l(rt_memclr_w.o)
+    0x080003ee   0x080003ee   0x00000006   Code   RO          756    .text               c_w.l(heapauxi.o)
+    0x080003f4   0x080003f4   0x0000004a   Code   RO          782    .text               c_w.l(sys_stackheap_outer.o)
+    0x0800043e   0x0800043e   0x00000012   Code   RO          784    .text               c_w.l(exit.o)
+    0x08000450   0x08000450   0x00000008   Code   RO          796    .text               c_w.l(libspace.o)
+    0x08000458   0x08000458   0x0000000c   Code   RO          854    .text               c_w.l(sys_exit.o)
+    0x08000464   0x08000464   0x00000002   Code   RO          877    .text               c_w.l(use_no_semi.o)
+    0x08000466   0x08000466   0x00000000   Code   RO          879    .text               c_w.l(indicate_semi.o)
     0x08000466   0x08000466   0x00000002   PAD
     0x08000468   0x08000468   0x00000002   Code   RO           70    .text.BusFault_Handler  stm32f4xx_it.o
     0x0800046a   0x0800046a   0x00000002   PAD
@@ -1766,51 +1772,54 @@ Memory Map of the image
     0x080016a2   0x080016a2   0x00000002   PAD
     0x080016a4   0x080016a4   0x00000002   Code   RO           64    .text.NMI_Handler   stm32f4xx_it.o
     0x080016a6   0x080016a6   0x00000002   PAD
-    0x080016a8   0x080016a8   0x000000e2   Code   RO          704    .text.OLED_DrawChar  oled.o
-    0x0800178a   0x0800178a   0x00000002   PAD
-    0x0800178c   0x0800178c   0x000000aa   Code   RO          696    .text.OLED_DrawLine  oled.o
-    0x08001836   0x08001836   0x00000002   PAD
-    0x08001838   0x08001838   0x00000038   Code   RO          728    .text.OLED_DrawPixel  ssd1315.o
-    0x08001870   0x08001870   0x0000005c   Code   RO          698    .text.OLED_DrawRectangle  oled.o
-    0x080018cc   0x080018cc   0x00000052   Code   RO          706    .text.OLED_DrawString  oled.o
-    0x0800191e   0x0800191e   0x00000002   PAD
-    0x08001920   0x08001920   0x0000001c   Code   RO          722    .text.OLED_FillScreen  ssd1315.o
-    0x0800193c   0x0800193c   0x000002be   Code   RO          720    .text.OLED_Init     ssd1315.o
-    0x08001bfa   0x08001bfa   0x00000002   PAD
-    0x08001bfc   0x08001bfc   0x0000016a   Code   RO          736    .text.OLED_RefreshScreen  ssd1315.o
-    0x08001d66   0x08001d66   0x00000002   PAD
-    0x08001d68   0x08001d68   0x000001ba   Code   RO          724    .text.OLED_RefreshScreen_Force  ssd1315.o
-    0x08001f22   0x08001f22   0x00000002   PAD
-    0x08001f24   0x08001f24   0x00000002   Code   RO           78    .text.PendSV_Handler  stm32f4xx_it.o
-    0x08001f26   0x08001f26   0x00000002   PAD
-    0x08001f28   0x08001f28   0x00000002   Code   RO           74    .text.SVC_Handler   stm32f4xx_it.o
-    0x08001f2a   0x08001f2a   0x00000002   PAD
-    0x08001f2c   0x08001f2c   0x00000004   Code   RO           80    .text.SysTick_Handler  stm32f4xx_it.o
-    0x08001f30   0x08001f30   0x000000a8   Code   RO           13    .text.SystemClock_Config  main.o
-    0x08001fd8   0x08001fd8   0x00000012   Code   RO          670    .text.SystemInit    system_stm32f4xx.o
-    0x08001fea   0x08001fea   0x00000002   PAD
-    0x08001fec   0x08001fec   0x00000002   Code   RO           72    .text.UsageFault_Handler  stm32f4xx_it.o
-    0x08001fee   0x08001fee   0x00000002   PAD
-    0x08001ff0   0x08001ff0   0x00000084   Code   RO           11    .text.main          main.o
-    0x08002074   0x08002074   0x0000001a   Code   RO          870    x$fpl$fpinit        fz_wm.l(fpinit.o)
-    0x0800208e   0x0800208e   0x00000010   Data   RO          675    .rodata.AHBPrescTable  system_stm32f4xx.o
-    0x0800209e   0x0800209e   0x00000008   Data   RO          676    .rodata.APBPrescTable  system_stm32f4xx.o
-    0x080020a6   0x080020a6   0x00000600   Data   RO          687    .rodata.Font_8x16_consolas_b_data  font.o
-    0x080026a6   0x080026a6   0x00000600   Data   RO          685    .rodata.Font_8x16_consolas_data  font.o
-    0x08002ca6   0x08002ca6   0x00000600   Data   RO          686    .rodata.Font_8x16_consolas_i_data  font.o
-    0x080032a6   0x080032a6   0x00000600   Data   RO          688    .rodata.Font_8x16_consolas_u_data  font.o
-    0x080038a6   0x080038a6   0x00000002   PAD
-    0x080038a8   0x080038a8   0x00000020   Data   RO          931    Region$$Table       anon$$obj.o
+    0x080016a8   0x080016a8   0x0000011e   Code   RO          704    .text.OLED_DrawChar  oled.o
+    0x080017c6   0x080017c6   0x00000002   PAD
+    0x080017c8   0x080017c8   0x000000aa   Code   RO          696    .text.OLED_DrawLine  oled.o
+    0x08001872   0x08001872   0x00000002   PAD
+    0x08001874   0x08001874   0x00000038   Code   RO          728    .text.OLED_DrawPixel  ssd1315.o
+    0x080018ac   0x080018ac   0x0000005c   Code   RO          698    .text.OLED_DrawRectangle  oled.o
+    0x08001908   0x08001908   0x00000052   Code   RO          706    .text.OLED_DrawString  oled.o
+    0x0800195a   0x0800195a   0x00000002   PAD
+    0x0800195c   0x0800195c   0x00000124   Code   RO          732    .text.OLED_FillArea  ssd1315.o
+    0x08001a80   0x08001a80   0x0000001c   Code   RO          722    .text.OLED_FillScreen  ssd1315.o
+    0x08001a9c   0x08001a9c   0x000002be   Code   RO          720    .text.OLED_Init     ssd1315.o
+    0x08001d5a   0x08001d5a   0x00000002   PAD
+    0x08001d5c   0x08001d5c   0x00000032   Code   RO          726    .text.OLED_ReadPixel  ssd1315.o
+    0x08001d8e   0x08001d8e   0x00000002   PAD
+    0x08001d90   0x08001d90   0x0000016a   Code   RO          736    .text.OLED_RefreshScreen  ssd1315.o
+    0x08001efa   0x08001efa   0x00000002   PAD
+    0x08001efc   0x08001efc   0x000001ba   Code   RO          724    .text.OLED_RefreshScreen_Force  ssd1315.o
+    0x080020b6   0x080020b6   0x00000002   PAD
+    0x080020b8   0x080020b8   0x00000002   Code   RO           78    .text.PendSV_Handler  stm32f4xx_it.o
+    0x080020ba   0x080020ba   0x00000002   PAD
+    0x080020bc   0x080020bc   0x00000002   Code   RO           74    .text.SVC_Handler   stm32f4xx_it.o
+    0x080020be   0x080020be   0x00000002   PAD
+    0x080020c0   0x080020c0   0x00000004   Code   RO           80    .text.SysTick_Handler  stm32f4xx_it.o
+    0x080020c4   0x080020c4   0x000000a8   Code   RO           13    .text.SystemClock_Config  main.o
+    0x0800216c   0x0800216c   0x00000012   Code   RO          670    .text.SystemInit    system_stm32f4xx.o
+    0x0800217e   0x0800217e   0x00000002   PAD
+    0x08002180   0x08002180   0x00000002   Code   RO           72    .text.UsageFault_Handler  stm32f4xx_it.o
+    0x08002182   0x08002182   0x00000002   PAD
+    0x08002184   0x08002184   0x00000094   Code   RO           11    .text.main          main.o
+    0x08002218   0x08002218   0x0000001a   Code   RO          871    x$fpl$fpinit        fz_wm.l(fpinit.o)
+    0x08002232   0x08002232   0x00000010   Data   RO          675    .rodata.AHBPrescTable  system_stm32f4xx.o
+    0x08002242   0x08002242   0x00000008   Data   RO          676    .rodata.APBPrescTable  system_stm32f4xx.o
+    0x0800224a   0x0800224a   0x00000600   Data   RO          687    .rodata.Font_8x16_consolas_b_data  font.o
+    0x0800284a   0x0800284a   0x00000600   Data   RO          685    .rodata.Font_8x16_consolas_data  font.o
+    0x08002e4a   0x08002e4a   0x00000600   Data   RO          686    .rodata.Font_8x16_consolas_i_data  font.o
+    0x0800344a   0x0800344a   0x00000600   Data   RO          688    .rodata.Font_8x16_consolas_u_data  font.o
+    0x08003a4a   0x08003a4a   0x00000002   PAD
+    0x08003a4c   0x08003a4c   0x00000020   Data   RO          932    Region$$Table       anon$$obj.o
 
 
-    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x080038c8, Size: 0x00000ae8, Max: 0x00010000, ABSOLUTE)
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08003a70, Size: 0x00000ae8, Max: 0x00010000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x080038c8   0x00000008   Data   RW          485    .data..L_MergedGlobals  stm32f4xx_hal.o
-    0x20000008   0x080038d0   0x00000014   Data   RW          689    .data.Font_8x16_consolas  font.o
-    0x2000001c   0x080038e4   0x00000004   Data   RW          674    .data.SystemCoreClock  system_stm32f4xx.o
-    0x20000020        -       0x00000060   Zero   RW          796    .bss                c_w.l(libspace.o)
+    0x20000000   0x08003a70   0x00000008   Data   RW          485    .data..L_MergedGlobals  stm32f4xx_hal.o
+    0x20000008   0x08003a78   0x00000014   Data   RW          689    .data.Font_8x16_consolas  font.o
+    0x2000001c   0x08003a8c   0x00000004   Data   RW          674    .data.SystemCoreClock  system_stm32f4xx.o
+    0x20000020        -       0x00000060   Zero   RW          797    .bss                c_w.l(libspace.o)
     0x20000080        -       0x00000400   Zero   RW          738    .bss.display_ram    ssd1315.o
     0x20000480        -       0x00000008   Zero   RW           40    .bss.hcrc           crc.o
     0x20000488        -       0x00000054   Zero   RW           55    .bss.hi2c1          i2c.o
@@ -1831,9 +1840,9 @@ Image component sizes
          0          0       6144         20          0       1012   font.o
         76          0          0          0          0       1533   gpio.o
        182          0          0          0         84       5324   i2c.o
-       306          8          0          0          0       3124   main.o
-       570          4          0          0          0       6855   oled.o
-      1590          0          0          0       1032       9036   ssd1315.o
+       322          8          0          0          0       3232   main.o
+       630          6          0          0          0       7193   oled.o
+      1932          0          0          0       1032       9158   ssd1315.o
         64         26        404          0       1536        840   startup_stm32f401xc.o
        204          0          0          8          4       6887   stm32f4xx_hal.o
        162          0          0          0          0      10235   stm32f4xx_hal_cortex.o
@@ -1846,9 +1855,9 @@ Image component sizes
         18          0         24          4          0       2674   system_stm32f4xx.o
 
     ----------------------------------------------------------------------
-      7244         42       6606         32       2664     114229   Object Totals
+      7664         44       6606         32       2664     114797   Object Totals
          0          0         32          0          0          0   (incl. Generated)
-        58          0          2          0          0          0   (incl. Padding)
+        60          0          2          0          0          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -1900,15 +1909,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      7930         58       6606         32       2760     114653   Grand Totals
-      7930         58       6606         32       2760     114653   ELF Image Totals
-      7930         58       6606         32          0          0   ROM Totals
+      8350         60       6606         32       2760     115221   Grand Totals
+      8350         60       6606         32       2760     115221   ELF Image Totals
+      8350         60       6606         32          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                14536 (  14.20kB)
+    Total RO  Size (Code + RO Data)                14956 (  14.61kB)
     Total RW  Size (RW Data + ZI Data)              2792 (   2.73kB)
-    Total ROM Size (Code + RO Data + RW Data)      14568 (  14.23kB)
+    Total ROM Size (Code + RO Data + RW Data)      14988 (  14.64kB)
 
 ==============================================================================
 

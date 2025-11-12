@@ -70,10 +70,10 @@ void OLED_Init(void){
  * @param y: Y坐标(0-63)
  * @return 像素状态: 1=点亮, 0=熄灭, 0xFF=坐标无效
  */
-uint8_t OLED_ReadPixel(uint16_t x, uint16_t y) {
+OLED_Pixel_t OLED_ReadPixel(uint16_t x, uint16_t y) {
     // 参数边界检查
     if (x >= SSD1315_WIDTH || y >= SSD1315_HEIGHT) {
-        return 0xFF; // 返回错误值
+        return OLED_ERROR; // 返回错误值
     }
     
     uint8_t page = y >> 3;  // y / 8
@@ -81,17 +81,21 @@ uint8_t OLED_ReadPixel(uint16_t x, uint16_t y) {
     
     // 读取像素状态
     if (display_ram[page][x] & bit_mask) {
-        return 1; // 像素点亮
+        return OLED_ON; // 像素点亮
     } else {
-        return 0; // 像素熄灭
+        return OLED_OFF; // 像素熄灭
     }
+}
+
+void OLED_DrawPixel_s(uint16_t x, uint16_t y, OLED_Pixel_t SetPixel){
+	
 }
 
 /**
 	* @brief 在缓冲区绘制像素点
   * @param x: X坐标, y: Y坐标, SetPixel: 填充值
   */
-void OLED_DrawPixel(uint16_t x, uint16_t y, uint8_t SetPixel) {
+void OLED_DrawPixel(uint16_t x, uint16_t y, OLED_Pixel_t SetPixel) {
 	if (x >= SSD1315_WIDTH || y >= SSD1315_HEIGHT) return;
 	
 	uint8_t page = y >> 3;  // y / 8
@@ -108,7 +112,7 @@ void OLED_DrawPixel(uint16_t x, uint16_t y, uint8_t SetPixel) {
 	* @brief 设置缓冲区某一水平线区域
   * @param SetPixel: 填充值
   */
-void OLED_DrawHorizontalLine (int16_t x0, int16_t x1, int16_t y, uint8_t SetPixel) {	
+void OLED_DrawHorizontalLine (int16_t x0, int16_t x1, int16_t y, OLED_Pixel_t SetPixel) {	
 	for(uint16_t n = x0; n <= x1; n++) {
 		uint8_t page = y >> 3;  // y / 8
 		uint8_t bit_mask = 1 << (y & 0x07); // y % 8
@@ -125,7 +129,7 @@ void OLED_DrawHorizontalLine (int16_t x0, int16_t x1, int16_t y, uint8_t SetPixe
 	* @brief 设置缓冲区某一区域的值
   * @param SetPixel: 填充值
   */
-void OLED_FillArea (uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t SetPixel) {	
+void OLED_FillArea (uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, OLED_Pixel_t SetPixel) {	
 	for (uint16_t m = y0; m <= y1; m++) {
 		for(uint16_t n = x0; n <= x1; n++) {
 			uint8_t page = m >> 3;  // y / 8
@@ -144,7 +148,7 @@ void OLED_FillArea (uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t 
 	* @brief 设置缓冲区全部的值
   * @param SetPixel: 填充值
   */
-void OLED_FillScreen(uint8_t SetPixel){
+void OLED_FillScreen(OLED_Pixel_t SetPixel){
 	memset(display_ram, SetPixel ? 0xFF : 0x00, sizeof(display_ram));
 }
 
@@ -196,7 +200,7 @@ void OLED_RefreshScreen(void) {
 }
 
 /**
-	* @brief 刷新整个屏幕(不更新校验码)
+	* @brief 强制刷新整个屏幕(不更新校验码)
   * @param
   */
 void OLED_RefreshScreen_Force(void) {
