@@ -61,7 +61,7 @@ void OLED_Init(void){
 	
 	OLED_FillScreen(OLED_OFF);
 	OLED_RefreshScreen_Force();
-	
+	HAL_Delay(100);
 }
 
 /**
@@ -71,57 +71,101 @@ void OLED_Init(void){
  * @return 像素状态: 1=点亮, 0=熄灭, 0xFF=坐标无效
  */
 OLED_Pixel_t OLED_ReadPixel(uint16_t x, uint16_t y) {
-    // 参数边界检查
-    if (x >= SSD1315_WIDTH || y >= SSD1315_HEIGHT) {
-        return OLED_ERROR; // 返回错误值
-    }
+	if (x >= SSD1315_WIDTH || y >= SSD1315_HEIGHT) 
+		return OLED_ERROR; // 返回错误值
     
-    uint8_t page = y >> 3;  // y / 8
-    uint8_t bit_mask = 1 << (y & 0x07); // y % 8
+	uint8_t page = y >> 3;  // y / 8
+  uint8_t bit_mask = 1 << (y & 0x07); // y % 8
     
-    // 读取像素状态
-    if (display_ram[page][x] & bit_mask) {
-        return OLED_ON; // 像素点亮
-    } else {
-        return OLED_OFF; // 像素熄灭
-    }
-}
-
-void OLED_DrawPixel_s(uint16_t x, uint16_t y, OLED_Pixel_t SetPixel){
-	
+  // 读取像素状态
+  if (display_ram[page][x] & bit_mask) 
+		return OLED_ON; // 像素点亮
+	else 
+		return OLED_OFF; // 像素熄灭
 }
 
 /**
 	* @brief 在缓冲区绘制像素点
-  * @param x: X坐标, y: Y坐标, SetPixel: 填充值
+  * @param x: X坐标, y: Y坐标, 
   */
-void OLED_DrawPixel(uint16_t x, uint16_t y, OLED_Pixel_t SetPixel) {
-	if (x >= SSD1315_WIDTH || y >= SSD1315_HEIGHT) return;
+OLED_Pixel_t OLED_DrawPixel(uint16_t x, uint16_t y, OLED_Pixel_t Pixel_Set, uint8_t Type){
+	if (x >= SSD1315_WIDTH || y >= SSD1315_HEIGHT) 
+		return OLED_ERROR;
 	
 	uint8_t page = y >> 3;  // y / 8
 	uint8_t bit_mask = 1 << (y & 0x07); // y % 8
 	
-	if (SetPixel) {
+	if(Pixel_Set){
+		if (Type & OLED_Normal) {
 			display_ram[page][x] |= bit_mask;
-	} else {
+			return OLED_ON;
+		}
+		else if(Type & OLED_Inverse) {
 			display_ram[page][x] &= ~bit_mask;
+			return OLED_OFF;
+		}
+		else if(Type & OLED_XOR){
+			OLED_Pixel_t pixel = OLED_ReadPixel(x, y);
+			
+			if (pixel == OLED_ON) {
+				display_ram[page][x] &= ~bit_mask;
+				return OLED_OFF;
+			}
+			else {
+				display_ram[page][x] |= bit_mask;
+				return OLED_ON;
+			}
+		}
 	}
+	
+	if(!Pixel_Set){
+		if (Type & OLED_nOver) {
+			return OLED_IDLE;
+		}
+		else if(Type & OLED_Over) {
+			if (Type & OLED_Normal) {
+				display_ram[page][x] &= ~bit_mask;
+				return OLED_OFF;
+			}
+			else if(Type & OLED_Inverse) {
+				display_ram[page][x] |= bit_mask;
+				return OLED_ON;
+			}
+			else if(Type & OLED_XOR){
+				OLED_Pixel_t pixel = OLED_ReadPixel(x, y);
+				
+				if (pixel == OLED_ON) {
+					display_ram[page][x] |= bit_mask;
+					return OLED_ON;
+				}
+				else {
+					display_ram[page][x] &= ~bit_mask;
+					return OLED_OFF;
+				}
+			}
+		}
+	}
+	
+	return OLED_IDLE;
 }
 
 /**
 	* @brief 设置缓冲区某一水平线区域
-  * @param SetPixel: 填充值
+  * @param 
   */
-void OLED_DrawHorizontalLine (int16_t x0, int16_t x1, int16_t y, OLED_Pixel_t SetPixel) {	
+void OLED_DrawHorizontalLine (int16_t x0, int16_t x1, int16_t y, OLED_Pixel_t SetPixel, uint8_t Type) {	
 	for(uint16_t n = x0; n <= x1; n++) {
-		uint8_t page = y >> 3;  // y / 8
-		uint8_t bit_mask = 1 << (y & 0x07); // y % 8
-		
-		if (SetPixel) {
-			display_ram[page][n] |= bit_mask;
-		} else {
-			display_ram[page][n] &= ~bit_mask;
-		}
+		 OLED_DrawPixel(n, y, SetPixel, Type);
+	}
+}
+
+/**
+	* @brief 设置缓冲区某一垂直线区域
+  * @param 
+  */
+void OLED_DrawVerticalLine (int16_t x, int16_t y0, int16_t y1, OLED_Pixel_t SetPixel, uint8_t Type) {	
+	for(uint16_t n = y0; n <= y1; n++) {
+		 OLED_DrawPixel(x, n, SetPixel, Type);
 	}
 }
 
@@ -129,20 +173,66 @@ void OLED_DrawHorizontalLine (int16_t x0, int16_t x1, int16_t y, OLED_Pixel_t Se
 	* @brief 设置缓冲区某一区域的值
   * @param SetPixel: 填充值
   */
-void OLED_FillArea (uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, OLED_Pixel_t SetPixel) {	
+void OLED_FillArea (uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, OLED_Pixel_t SetPixel, uint8_t Type) {	
 	for (uint16_t m = y0; m <= y1; m++) {
 		for(uint16_t n = x0; n <= x1; n++) {
-			uint8_t page = m >> 3;  // y / 8
-			uint8_t bit_mask = 1 << (m & 0x07); // y % 8
-			
-			if (SetPixel) {
-				display_ram[page][n] |= bit_mask;
-			} else {
-				display_ram[page][n] &= ~bit_mask;
-			}
+			OLED_DrawPixel(n, m, SetPixel, Type);
 		}
 	}
 }
+
+///**
+//	* @brief 在缓冲区绘制像素点
+//  * @param x: X坐标, y: Y坐标, SetPixel: 填充值
+//  */
+//void OLED_DrawPixel(uint16_t x, uint16_t y, OLED_Pixel_t SetPixel) {
+//	if (x >= SSD1315_WIDTH || y >= SSD1315_HEIGHT) return;
+//	
+//	uint8_t page = y >> 3;  // y / 8
+//	uint8_t bit_mask = 1 << (y & 0x07); // y % 8
+//	
+//	if (SetPixel) {
+//			display_ram[page][x] |= bit_mask;
+//	} else {
+//			display_ram[page][x] &= ~bit_mask;
+//	}
+//}
+
+///**
+//	* @brief 设置缓冲区某一水平线区域
+//  * @param SetPixel: 填充值
+//  */
+//void OLED_DrawHorizontalLine (int16_t x0, int16_t x1, int16_t y, OLED_Pixel_t SetPixel) {	
+//	for(uint16_t n = x0; n <= x1; n++) {
+//		uint8_t page = y >> 3;  // y / 8
+//		uint8_t bit_mask = 1 << (y & 0x07); // y % 8
+//		
+//		if (SetPixel) {
+//			display_ram[page][n] |= bit_mask;
+//		} else {
+//			display_ram[page][n] &= ~bit_mask;
+//		}
+//	}
+//}
+
+///**
+//	* @brief 设置缓冲区某一区域的值
+//  * @param SetPixel: 填充值
+//  */
+//void OLED_FillArea (uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, OLED_Pixel_t SetPixel) {	
+//	for (uint16_t m = y0; m <= y1; m++) {
+//		for(uint16_t n = x0; n <= x1; n++) {
+//			uint8_t page = m >> 3;  // y / 8
+//			uint8_t bit_mask = 1 << (m & 0x07); // y % 8
+//			
+//			if (SetPixel) {
+//				display_ram[page][n] |= bit_mask;
+//			} else {
+//				display_ram[page][n] &= ~bit_mask;
+//			}
+//		}
+//	}
+//}
 
 /**
 	* @brief 设置缓冲区全部的值

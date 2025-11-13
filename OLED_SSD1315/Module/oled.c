@@ -8,7 +8,7 @@
  * @brief 绘制直线 - Bresenham算法
  * @note  坐标 (x, y) = (水平, 垂直)
  */
-void OLED_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t SetPixel)
+void OLED_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t SetPixel, uint8_t Type)
 {
     // 优化：使用 stdlib.h 中的 abs()
 	int16_t dx = abs(x1 - x0);
@@ -20,7 +20,7 @@ void OLED_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t S
 
 	while(1) {
 		// 优化：使用 DrawPixel
-		OLED_DrawPixel(x0, y0, SetPixel);
+		OLED_DrawPixel(x0, y0, SetPixel, Type);
         // 优化：移除 frame_bit 写入
 
 		if (x0 == x1 && y0 == y1) break;
@@ -42,21 +42,15 @@ void OLED_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t S
  * @note  坐标 (x, y) = (水平, 垂直)
  * @note  绘制从 (x0, y0) 到 (x1-1, y1-1) 的矩形
  */
-void OLED_DrawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t SetPixel)
+void OLED_DrawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t SetPixel, uint8_t Type)
 {
-    // 修正坐标系
+  // 修正坐标系
 	uint16_t x_start = (x0 > x1) ? x1 : x0;
 	uint16_t x_end   = (x0 > x1) ? x0 : x1;
 	uint16_t y_start = (y0 > y1) ? y1 : y0;
 	uint16_t y_end   = (y0 > y1) ? y0 : y1;
 	
-	for(uint16_t y = y_start; y < y_end; y++)
-	{
-		for(uint16_t x = x_start; x < x_end; x++)
-		{
-			OLED_DrawPixel(x, y, SetPixel);
-		}
-	}
+	OLED_FillArea(x_start, y_start, x_end, y_end, SetPixel, Type);
 }
 
 /**
@@ -64,7 +58,7 @@ void OLED_DrawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint
  * @note  坐标 (x0, y0) = (水平中心, 垂直中心)
  * @param quadrant_mask: 位掩码 0x01=右上, 0x02=左上, 0x04=左下, 0x08=右下
  */
-void OLED_DrawQuarterArc(uint16_t x0, uint16_t y0, uint16_t r, uint8_t quadrant_mask, uint8_t SetPixel)
+void OLED_DrawQuarterArc(uint16_t x0, uint16_t y0, uint16_t r, uint8_t quadrant_mask, uint8_t SetPixel, uint8_t Type)
 {
 	int16_t x = 0;
 	int16_t y = r;
@@ -77,23 +71,23 @@ void OLED_DrawQuarterArc(uint16_t x0, uint16_t y0, uint16_t r, uint8_t quadrant_
         
         // 象限 1 (右上): (+x, -y), (+y, -x)
         if (quadrant_mask & 0x01) { 
-            OLED_DrawPixel(x0 + x, y0 - y, SetPixel);
-            OLED_DrawPixel(x0 + y, y0 - x, SetPixel);
+            OLED_DrawPixel(x0 + x, y0 - y, SetPixel, Type);
+            OLED_DrawPixel(x0 + y, y0 - x, SetPixel, Type);
         }
         // 象限 2 (左上): (-x, -y), (-y, -x)
         if (quadrant_mask & 0x02) { 
-            OLED_DrawPixel(x0 - x, y0 - y, SetPixel);
-            OLED_DrawPixel(x0 - y, y0 - x, SetPixel);
+            OLED_DrawPixel(x0 - x, y0 - y, SetPixel, Type);
+            OLED_DrawPixel(x0 - y, y0 - x, SetPixel, Type);
         }
         // 象限 3 (左下): (-x, +y), (-y, +x)
         if (quadrant_mask & 0x04) { 
-            OLED_DrawPixel(x0 - x, y0 + y, SetPixel);
-            OLED_DrawPixel(x0 - y, y0 + x, SetPixel);
+            OLED_DrawPixel(x0 - x, y0 + y, SetPixel, Type);
+            OLED_DrawPixel(x0 - y, y0 + x, SetPixel, Type);
         }
         // 象限 4 (右下): (+x, +y), (+y, +x)
         if (quadrant_mask & 0x08) { 
-            OLED_DrawPixel(x0 + x, y0 + y, SetPixel);
-            OLED_DrawPixel(x0 + y, y0 + x, SetPixel);
+            OLED_DrawPixel(x0 + x, y0 + y, SetPixel, Type);
+            OLED_DrawPixel(x0 + y, y0 + x, SetPixel, Type);
         }
 
         if(d < 0) {
@@ -111,7 +105,7 @@ void OLED_DrawQuarterArc(uint16_t x0, uint16_t y0, uint16_t r, uint8_t quadrant_
  * @note  坐标 (x0, y0) = (水平中心, 垂直中心)
  * @param quadrant_mask: 位掩码 0x01=右上, 0x02=左上, 0x04=左下, 0x08=右下
  */
-void OLED_DrawQuarterSector(uint16_t x0, uint16_t y0, uint16_t r, uint8_t quadrant_mask, uint8_t SetPixel)
+void OLED_DrawQuarterSector(uint16_t x0, uint16_t y0, uint16_t r, uint8_t quadrant_mask, uint8_t SetPixel, uint8_t Type)
 {
 	int16_t x = 0;
 	int16_t y = r;
@@ -121,23 +115,23 @@ void OLED_DrawQuarterSector(uint16_t x0, uint16_t y0, uint16_t r, uint8_t quadra
 	while(x <= y) {
 		// 象限 1 (右上)
 		if(quadrant_mask & 0x01) {
-            OLED_DrawHorizontalLine(x0, x0 + x, y0 - y, SetPixel);
-            OLED_DrawHorizontalLine(x0, x0 + y, y0 - x, SetPixel);
+            OLED_DrawHorizontalLine(x0, x0 + x, y0 - y, SetPixel, Type);
+            OLED_DrawHorizontalLine(x0, x0 + y, y0 - x, SetPixel, Type);
 		}
 		// 象限 2 (左上)
 		if(quadrant_mask & 0x02) {
-            OLED_DrawHorizontalLine(x0 - x, x0, y0 - y, SetPixel);
-            OLED_DrawHorizontalLine(x0 - y, x0, y0 - x, SetPixel);
+            OLED_DrawHorizontalLine(x0 - x, x0, y0 - y, SetPixel, Type);
+            OLED_DrawHorizontalLine(x0 - y, x0, y0 - x, SetPixel, Type);
 		}
 		// 象限 3 (左下)
 		if(quadrant_mask & 0x04) {
-            OLED_DrawHorizontalLine(x0 - x, x0, y0 + y, SetPixel);
-            OLED_DrawHorizontalLine(x0 - y, x0, y0 + x, SetPixel);
+            OLED_DrawHorizontalLine(x0 - x, x0, y0 + y, SetPixel, Type);
+            OLED_DrawHorizontalLine(x0 - y, x0, y0 + x, SetPixel, Type);
 		}
 		// 象限 4 (右下)
 		if(quadrant_mask & 0x08) {
-            OLED_DrawHorizontalLine(x0, x0 + x, y0 + y, SetPixel);
-            OLED_DrawHorizontalLine(x0, x0 + y, y0 + x, SetPixel);
+            OLED_DrawHorizontalLine(x0, x0 + x, y0 + y, SetPixel, Type);
+            OLED_DrawHorizontalLine(x0, x0 + y, y0 + x, SetPixel, Type);
 		}
 	
 		// Bresenham算法更新
@@ -155,11 +149,11 @@ void OLED_DrawQuarterSector(uint16_t x0, uint16_t y0, uint16_t r, uint8_t quadra
  * @brief 绘制字符
  * @note  坐标 (x, y) = (水平, 垂直)
  */
-void OLED_DrawChar(uint16_t x, uint16_t y, char ch, const struFont *font, uint8_t type, uint8_t mode){	
+void OLED_DrawChar(uint16_t x, uint16_t y, char ch, const struFont *font, uint8_t font_t, uint8_t Type){	
 	uint8_t char_index = ch - ' ';
 	const uint8_t *char_data ;
 	const uint8_t *font_type ;
-	switch(type){
+	switch(font_t){
 		case(FONT_Regular):font_type = font->Font_Regular ;
 			break;
 		case(FONT_Italic) :font_type = font->Font_Italic  ;
@@ -179,7 +173,7 @@ void OLED_DrawChar(uint16_t x, uint16_t y, char ch, const struFont *font, uint8_
 			uint8_t bit_index = col % 8;
 			uint8_t current_byte = char_data[row * font->bytes_per_row + byte_index];
 			
-			uint8_t pixel_set = 0;
+			OLED_Pixel_t pixel_set = 0;
 			if(font->bit_order == 0) {
 				// 高位在前（MSB first）
 				pixel_set = current_byte & (0x80 >> bit_index);
@@ -188,42 +182,7 @@ void OLED_DrawChar(uint16_t x, uint16_t y, char ch, const struFont *font, uint8_
 				pixel_set = current_byte & (0x01 << bit_index);
 			}
 			
-			
-			
-//			switch(mode){
-//				case 0:{
-//					if(pixel_set){
-//						OLED_DrawPixel(x + col, y + row, OLED_ON);
-//					}
-//					break;
-//				}
-//				case 1:{
-//					if(pixel_set){
-//						OLED_DrawPixel(x + col, y + row, OLED_OFF);
-//					}
-//					break;
-//				}
-//				case 2:{
-//					if(pixel_set){
-//						OLED_DrawPixel(x + col, y + row, OLED_ON);
-//					}
-//					else{
-//						OLED_DrawPixel(x + col, y + row, OLED_OFF);
-//					}
-//					break;
-//				}
-//				case 3:{
-//					if(pixel_set){
-//						if(OLED_ReadPixel(x + col, y + row) == 0){
-//							OLED_DrawPixel(x + col, y + row, OLED_ON);
-//						}
-//						else if(OLED_ReadPixel(x + col, y + row) == 1){
-//							OLED_DrawPixel(x + col, y + row, OLED_OFF);
-//						}
-//					}
-//					break;
-//				}
-//			}
+			OLED_DrawPixel(x + col, y + row, pixel_set, Type);
 		}
 	}
 }
@@ -232,7 +191,7 @@ void OLED_DrawChar(uint16_t x, uint16_t y, char ch, const struFont *font, uint8_
  * @brief 绘制字符串
  * @note  坐标 (x, y) = (水平, 垂直)
  */
-void OLED_DrawString(uint16_t x, uint16_t y, const char *str, const struFont *font, uint8_t type, uint8_t mode)
+void OLED_DrawString(uint16_t x, uint16_t y, const char *str, const struFont *font, uint8_t font_t, uint8_t Type)
 {
     // 修正坐标系
 	uint16_t current_x = x;
@@ -240,7 +199,7 @@ void OLED_DrawString(uint16_t x, uint16_t y, const char *str, const struFont *fo
 	
 	while(*str != '\0')
 	{
-		OLED_DrawChar(current_x, current_y, *str, font, type, mode);
+		OLED_DrawChar(current_x, current_y, *str, font, font_t, Type);
 		
 		// 水平前进
 		current_x += font->width;
@@ -270,7 +229,7 @@ void OLED_DrawString(uint16_t x, uint16_t y, const char *str, const struFont *fo
  * @param image: 图像数据指针
  * @param mode: 绘制模式
  */
-void OLED_DrawImage(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint8_t *image, uint8_t mode) {
+void OLED_DrawImage(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint8_t *image, uint8_t Type) {
     // 参数边界检查
     if (x >= SSD1315_WIDTH || y >= SSD1315_HEIGHT) return;
     
@@ -291,43 +250,9 @@ void OLED_DrawImage(uint16_t x, uint16_t y, uint16_t width, uint16_t height, con
             uint16_t byte_index = row * bytes_per_line + (col / 8);
             uint8_t bit_index = 7 - (col % 8); // 通常位图数据是MSB在前
             
-            uint8_t pixel_set = (image[byte_index] >> bit_index) & 0x01;
+            OLED_Pixel_t Pixel_Set = (image[byte_index] >> bit_index) & 0x01;
             
-            // 根据绘制模式处理像素
-						switch(mode){
-						case 0:{
-							if(pixel_set){
-								OLED_DrawPixel(x + col, y + row, OLED_ON);
-							}
-							break;
-						}
-						case 2:{
-							if(pixel_set){
-								OLED_DrawPixel(x + col, y + row, OLED_OFF);
-							}
-							break;
-						}
-						case 3:{
-							if(pixel_set){
-								OLED_DrawPixel(x + col, y + row, OLED_ON);
-							}
-							else{
-								OLED_DrawPixel(x + col, y + row, OLED_OFF);
-							}
-							break;
-						}
-						case 4:{
-							if(pixel_set){
-								if(OLED_ReadPixel(x + col, y + row) == 0){
-									OLED_DrawPixel(x + col, y + row, OLED_ON);
-								}
-								else if(OLED_ReadPixel(x + col, y + row) == 1){
-									OLED_DrawPixel(x + col, y + row, OLED_OFF);
-								}
-							}
-							break;
-						}
-					}
+						OLED_DrawPixel(x + col, y + row, Pixel_Set, Type);
         }
     }
 }

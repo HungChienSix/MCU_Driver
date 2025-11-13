@@ -20,6 +20,7 @@
 #include "main.h"
 #include "crc.h"
 #include "i2c.h"
+#include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -59,6 +60,7 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 uint32_t value = 0;
+extern uint8_t display_ram[8][128];
 /* USER CODE END 0 */
 
 /**
@@ -92,30 +94,38 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   MX_CRC_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 	OLED_Init();
 
+//	HAL_UART_Transmit(&huart1,"Hello",sizeof("Hello"),100);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		//OLED_DrawLine(20,20,40,40,OLED_ON);
-		//OLED_DrawQuarterArc(20,20,5,0x06,OLED_ON);
-		//OLED_DrawQuarterSector(20,20,5,0x06,OLED_ON);
-		OLED_FillArea(0, 0, 127, 7, OLED_ON);
-		OLED_DrawString(0,0,"Hello",&Font_8x16_consolas, FONT_Regular, OLED_XOR);
-		//OLED_DrawImage(0,0,64,64,(uint8_t*)gImage_saber0_bin,IMG_Normal);
-		OLED_RefreshScreen();
-		HAL_Delay(500);
-		OLED_FillScreen(OLED_OFF);
 		
-		OLED_DrawLine(20,40,40,20,OLED_ON);
-		OLED_DrawRectangle(0,0,10,16,OLED_ON);
+		OLED_FillArea(0, 0, 127, 7, OLED_ON, OLED_Over | OLED_Normal);
+		OLED_DrawRectangle(20,20,5,5, OLED_ON, OLED_Over | OLED_Normal);
+//		OLED_DrawString(0,0,"Hello",&Font_8x16_consolas, FONT_Regular, OLED_Over | OLED_Normal);
 		OLED_RefreshScreen();
-		HAL_Delay(500);
 		OLED_FillScreen(OLED_OFF);
+		HAL_Delay(500);
+		
+		OLED_FillArea(0, 0, 127, 7, OLED_ON, OLED_Over | OLED_Normal);
+		OLED_DrawRectangle(20,20,5,5, OLED_ON, OLED_Over | OLED_Inverse);
+//		OLED_DrawString(0,0,"Hello",&Font_8x16_consolas, FONT_Regular, OLED_Over | OLED_Inverse);
+		OLED_RefreshScreen();
+		OLED_FillScreen(OLED_OFF);
+		HAL_Delay(500);
+		
+		OLED_FillArea(0, 0, 127, 7, OLED_ON, OLED_Over | OLED_Normal);
+		OLED_DrawRectangle(20,20,5,5, OLED_ON, OLED_Over | OLED_XOR);
+//		OLED_DrawString(0,0,"Hello",&Font_8x16_consolas, FONT_Regular, OLED_Over | OLED_XOR);
+		OLED_RefreshScreen();
+		OLED_FillScreen(OLED_OFF);
+		HAL_Delay(500);
 		
     /* USER CODE END WHILE */
 
