@@ -3,7 +3,7 @@
 <title>Static Call Graph - [OLED_SSD1315\OLED_SSD1315.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image OLED_SSD1315\OLED_SSD1315.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Thu Nov 13 19:22:16 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Thu Nov 13 22:53:32 2025
 <BR><P>
 <H3>Maximum Stack Usage =        208 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -734,19 +734,18 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f401xc.o(RESET)
 </UL>
-<P><STRONG><a name="[79]"></a>OLED_DrawRectangle</STRONG> (Thumb, 46 bytes, Stack size 16 bytes, oled.o(.text.OLED_DrawRectangle))
-<BR><BR>[Stack]<UL><LI>Max Depth = 68<LI>Call Chain = OLED_DrawRectangle &rArr; OLED_FillArea
+<P><STRONG><a name="[79]"></a>OLED_DrawImage</STRONG> (Thumb, 146 bytes, Stack size 48 bytes, oled.o(.text.OLED_DrawImage))
+<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = OLED_DrawImage &rArr; OLED_DrawPixel
 </UL>
-<BR>[Calls]<UL><LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OLED_FillArea
+<BR>[Calls]<UL><LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OLED_DrawPixel
 </UL>
 <BR>[Called By]<UL><LI><a href="#[4f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[7a]"></a>OLED_FillArea</STRONG> (Thumb, 1162 bytes, Stack size 52 bytes, ssd1315.o(.text.OLED_FillArea))
-<BR><BR>[Stack]<UL><LI>Max Depth = 52<LI>Call Chain = OLED_FillArea
+<P><STRONG><a name="[7a]"></a>OLED_DrawPixel</STRONG> (Thumb, 178 bytes, Stack size 16 bytes, ssd1315.o(.text.OLED_DrawPixel))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = OLED_DrawPixel
 </UL>
-<BR>[Called By]<UL><LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OLED_DrawRectangle
-<LI><a href="#[4f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<BR>[Called By]<UL><LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OLED_DrawImage
 </UL>
 
 <P><STRONG><a name="[7b]"></a>OLED_FillScreen</STRONG> (Thumb, 28 bytes, Stack size 8 bytes, ssd1315.o(.text.OLED_FillScreen))
@@ -813,15 +812,14 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f401xc.o(RESET)
 </UL>
-<P><STRONG><a name="[4f]"></a>main</STRONG> (Thumb, 192 bytes, Stack size 8 bytes, main.o(.text.main))
+<P><STRONG><a name="[4f]"></a>main</STRONG> (Thumb, 76 bytes, Stack size 8 bytes, main.o(.text.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 208 + Unknown Stack Size
 <LI>Call Chain = main &rArr; OLED_Init &rArr; OLED_RefreshScreen_Force &rArr; HAL_I2C_Mem_Write &rArr; I2C_RequestMemoryWrite &rArr; I2C_WaitOnMasterAddressFlagUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Delay
 <LI><a href="#[7b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OLED_FillScreen
 <LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OLED_RefreshScreen
-<LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OLED_DrawRectangle
-<LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OLED_FillArea
+<LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OLED_DrawImage
 <LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OLED_Init
 <LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_USART1_UART_Init
 <LI><a href="#[75]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_CRC_Init

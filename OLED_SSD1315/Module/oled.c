@@ -1,7 +1,6 @@
 #include "oled.h"
 #include "ssd1315.h"
 #include "font.h"
-#include <stdlib.h> // For abs()
 #include <string.h> // For memset()
 
 /**
@@ -10,18 +9,16 @@
  */
 void OLED_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t SetPixel, uint8_t Type)
 {
-    // 优化：使用 stdlib.h 中的 abs()
-	int16_t dx = abs(x1 - x0);
-	int16_t dy = abs(y1 - y0);
+	uint8_t Type_nOver = (Type & 0x0F) | 0x10;
+	int16_t dx = (x1 > x0)?(x1 - x0):(x0 - x1);
+	int16_t dy = (x1 > x0)?(y1 - y0):(x0 - x1);
 	int16_t sx = (x0 < x1) ? 1 : -1;
 	int16_t sy = (y0 < y1) ? 1 : -1;
 	int16_t err = dx - dy;
 	int16_t e2;
 
 	while(1) {
-		// 优化：使用 DrawPixel
-		OLED_DrawPixel(x0, y0, SetPixel, Type);
-        // 优化：移除 frame_bit 写入
+		OLED_DrawPixel(x0, y0, SetPixel, Type_nOver);
 
 		if (x0 == x1 && y0 == y1) break;
 
@@ -44,52 +41,60 @@ void OLED_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t S
  */
 void OLED_DrawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t SetPixel, uint8_t Type)
 {
-  // 修正坐标系
+	uint8_t Type_nOver = (Type & 0x0F) | 0x10;
 	uint16_t x_start = (x0 > x1) ? x1 : x0;
 	uint16_t x_end   = (x0 > x1) ? x0 : x1;
 	uint16_t y_start = (y0 > y1) ? y1 : y0;
 	uint16_t y_end   = (y0 > y1) ? y0 : y1;
 	
-	OLED_FillArea(x_start, y_start, x_end, y_end, SetPixel, Type);
+	OLED_FillArea(x_start, y_start, x_end, y_end, SetPixel, Type_nOver);
 }
 
 /**
- * @brief 绘制四分之一圆弧 - Bresenham算法 (优化)
+ * @brief 绘制四分之一圆弧 - Bresenham算法 (优化连续绘制)
  * @note  坐标 (x0, y0) = (水平中心, 垂直中心)
  * @param quadrant_mask: 位掩码 0x01=右上, 0x02=左上, 0x04=左下, 0x08=右下
  */
 void OLED_DrawQuarterArc(uint16_t x0, uint16_t y0, uint16_t r, uint8_t quadrant_mask, uint8_t SetPixel, uint8_t Type)
 {
-	int16_t x = 0;
-	int16_t y = r;
-	int16_t d = 3 - 2 * r;
-	
-    // 优化：合并为一个循环
+	uint8_t Type_nOver = (Type & 0x0F) | 0x10;
+    int16_t x = 0;
+    int16_t y = r;
+    int16_t d = 3 - 2 * r;
+    
+    // 预计算所有八分圆点，确保连续性
     while(x <= y) {
-        // (x0, y0) 是中心
-        // 坐标系已修正为 (水平, 垂直)
+        // 第一组点 (x,y)
+        if (quadrant_mask & 0x01) { // 右上: (+x, -y)
+            OLED_DrawPixel(x0 + x, y0 - y, SetPixel, Type_nOver);
+        }
+        if (quadrant_mask & 0x02) { // 左上: (-x, -y)
+            OLED_DrawPixel(x0 - x, y0 - y, SetPixel, Type_nOver);
+        }
+        if (quadrant_mask & 0x04) { // 左下: (-x, +y)
+            OLED_DrawPixel(x0 - x, y0 + y, SetPixel, Type_nOver);
+        }
+        if (quadrant_mask & 0x08) { // 右下: (+x, +y)
+            OLED_DrawPixel(x0 + x, y0 + y, SetPixel, Type_nOver);
+        }
         
-        // 象限 1 (右上): (+x, -y), (+y, -x)
-        if (quadrant_mask & 0x01) { 
-            OLED_DrawPixel(x0 + x, y0 - y, SetPixel, Type);
-            OLED_DrawPixel(x0 + y, y0 - x, SetPixel, Type);
+        // 第二组点 (y,x) - 八分圆对称点
+        if (x != y) { // 避免45度角重复绘制
+            if (quadrant_mask & 0x01) { // 右上: (+y, -x)
+                OLED_DrawPixel(x0 + y, y0 - x, SetPixel, Type_nOver);
+            }
+            if (quadrant_mask & 0x02) { // 左上: (-y, -x)
+                OLED_DrawPixel(x0 - y, y0 - x, SetPixel, Type_nOver);
+            }
+            if (quadrant_mask & 0x04) { // 左下: (-y, +x)
+                OLED_DrawPixel(x0 - y, y0 + x, SetPixel, Type_nOver);
+            }
+            if (quadrant_mask & 0x08) { // 右下: (+y, +x)
+                OLED_DrawPixel(x0 + y, y0 + x, SetPixel, Type_nOver);
+            }
         }
-        // 象限 2 (左上): (-x, -y), (-y, -x)
-        if (quadrant_mask & 0x02) { 
-            OLED_DrawPixel(x0 - x, y0 - y, SetPixel, Type);
-            OLED_DrawPixel(x0 - y, y0 - x, SetPixel, Type);
-        }
-        // 象限 3 (左下): (-x, +y), (-y, +x)
-        if (quadrant_mask & 0x04) { 
-            OLED_DrawPixel(x0 - x, y0 + y, SetPixel, Type);
-            OLED_DrawPixel(x0 - y, y0 + x, SetPixel, Type);
-        }
-        // 象限 4 (右下): (+x, +y), (+y, +x)
-        if (quadrant_mask & 0x08) { 
-            OLED_DrawPixel(x0 + x, y0 + y, SetPixel, Type);
-            OLED_DrawPixel(x0 + y, y0 + x, SetPixel, Type);
-        }
-
+        
+        // Bresenham算法更新
         if(d < 0) {
             d = d + 4 * x + 6;
         } else {
@@ -98,6 +103,27 @@ void OLED_DrawQuarterArc(uint16_t x0, uint16_t y0, uint16_t r, uint8_t quadrant_
         }
         x++;
     }
+    
+//    // 补充绘制关键连接点，确保圆弧连续性
+//    if (r > 0) {
+//        // 绘制起点和终点附近的额外点来填补间隙
+//        if (quadrant_mask & 0x01) { // 右上象限补充点
+//            OLED_DrawPixel(x0 + r, y0, SetPixel, Type_nOver);     // 0度
+//            OLED_DrawPixel(x0, y0 - r, SetPixel, Type_nOver);     // 90度
+//        }
+//        if (quadrant_mask & 0x02) { // 左上象限补充点
+//            OLED_DrawPixel(x0 - r, y0, SetPixel, Type_nOver);     // 180度
+//            OLED_DrawPixel(x0, y0 - r, SetPixel, Type_nOver);     // 90度
+//        }
+//        if (quadrant_mask & 0x04) { // 左下象限补充点
+//            OLED_DrawPixel(x0 - r, y0, SetPixel, Type_nOver);     // 180度
+//            OLED_DrawPixel(x0, y0 + r, SetPixel, Type_nOver);     // 270度
+//        }
+//        if (quadrant_mask & 0x08) { // 右下象限补充点
+//            OLED_DrawPixel(x0 + r, y0, SetPixel, Type_nOver);     // 0度
+//            OLED_DrawPixel(x0, y0 + r, SetPixel, Type_nOver);     // 270度
+//        }
+//    }
 }
 
 /**
@@ -107,31 +133,31 @@ void OLED_DrawQuarterArc(uint16_t x0, uint16_t y0, uint16_t r, uint8_t quadrant_
  */
 void OLED_DrawQuarterSector(uint16_t x0, uint16_t y0, uint16_t r, uint8_t quadrant_mask, uint8_t SetPixel, uint8_t Type)
 {
+	uint8_t Type_nOver = (Type & 0x0F) | 0x10;
 	int16_t x = 0;
 	int16_t y = r;
 	int16_t d = 3 - 2 * r;
 	
-	// 优化：使用水平扫描线填充，而不是径向线
 	while(x <= y) {
 		// 象限 1 (右上)
 		if(quadrant_mask & 0x01) {
-            OLED_DrawHorizontalLine(x0, x0 + x, y0 - y, SetPixel, Type);
-            OLED_DrawHorizontalLine(x0, x0 + y, y0 - x, SetPixel, Type);
+            OLED_DrawHorizontalLine(x0, x0 + x, y0 - y, SetPixel, Type_nOver);
+            OLED_DrawHorizontalLine(x0, x0 + y, y0 - x, SetPixel, Type_nOver);
 		}
 		// 象限 2 (左上)
 		if(quadrant_mask & 0x02) {
-            OLED_DrawHorizontalLine(x0 - x, x0, y0 - y, SetPixel, Type);
-            OLED_DrawHorizontalLine(x0 - y, x0, y0 - x, SetPixel, Type);
+            OLED_DrawHorizontalLine(x0 - x, x0, y0 - y, SetPixel, Type_nOver);
+            OLED_DrawHorizontalLine(x0 - y, x0, y0 - x, SetPixel, Type_nOver);
 		}
 		// 象限 3 (左下)
 		if(quadrant_mask & 0x04) {
-            OLED_DrawHorizontalLine(x0 - x, x0, y0 + y, SetPixel, Type);
-            OLED_DrawHorizontalLine(x0 - y, x0, y0 + x, SetPixel, Type);
+            OLED_DrawHorizontalLine(x0 - x, x0, y0 + y, SetPixel, Type_nOver);
+            OLED_DrawHorizontalLine(x0 - y, x0, y0 + x, SetPixel, Type_nOver);
 		}
 		// 象限 4 (右下)
 		if(quadrant_mask & 0x08) {
-            OLED_DrawHorizontalLine(x0, x0 + x, y0 + y, SetPixel, Type);
-            OLED_DrawHorizontalLine(x0, x0 + y, y0 + x, SetPixel, Type);
+            OLED_DrawHorizontalLine(x0, x0 + x, y0 + y, SetPixel, Type_nOver);
+            OLED_DrawHorizontalLine(x0, x0 + y, y0 + x, SetPixel, Type_nOver);
 		}
 	
 		// Bresenham算法更新

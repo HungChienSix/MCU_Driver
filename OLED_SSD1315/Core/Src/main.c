@@ -105,27 +105,38 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+//		//测试1 正常通过
+//		OLED_DrawPixel(5, 5, OLED_ON, OLED_Over | OLED_Normal);
+//		OLED_DrawHorizontalLine(10, 20, 5, OLED_ON, OLED_Over | OLED_Normal);
+//		OLED_DrawVerticalLine(5, 10, 20, OLED_ON, OLED_Over | OLED_Normal);
+//		OLED_FillArea(20, 20, 30, 30, OLED_ON, OLED_Over | OLED_Normal);
+//		OLED_RefreshScreen();
+//		OLED_FillScreen(OLED_OFF);
+//		HAL_Delay(500);
 		
-		OLED_FillArea(0, 0, 127, 7, OLED_ON, OLED_Over | OLED_Normal);
-		OLED_DrawRectangle(20,20,5,5, OLED_ON, OLED_Over | OLED_Normal);
-//		OLED_DrawString(0,0,"Hello",&Font_8x16_consolas, FONT_Regular, OLED_Over | OLED_Normal);
-		OLED_RefreshScreen();
-		OLED_FillScreen(OLED_OFF);
-		HAL_Delay(500);
+//		//测试2 正常通过
+//		OLED_DrawLine(10, 10, 5, 5, OLED_ON, OLED_Normal);
+//		OLED_DrawRectangle(30, 40, 20, 30, OLED_ON, OLED_Normal);
+//		OLED_DrawQuarterArc(50, 50, 10, Quarter1|Quarter2, OLED_ON, OLED_Normal);
+//		OLED_DrawQuarterSector(50, 50, 10, Quarter3|Quarter4, OLED_ON, OLED_Normal);
+//		OLED_FillArea(20, 20, 30, 30, OLED_ON, OLED_Normal);
+//		OLED_RefreshScreen();
+//		OLED_FillScreen(OLED_OFF);
+//		HAL_Delay(500);
 		
-		OLED_FillArea(0, 0, 127, 7, OLED_ON, OLED_Over | OLED_Normal);
-		OLED_DrawRectangle(20,20,5,5, OLED_ON, OLED_Over | OLED_Inverse);
-//		OLED_DrawString(0,0,"Hello",&Font_8x16_consolas, FONT_Regular, OLED_Over | OLED_Inverse);
-		OLED_RefreshScreen();
-		OLED_FillScreen(OLED_OFF);
-		HAL_Delay(500);
-		
-		OLED_FillArea(0, 0, 127, 7, OLED_ON, OLED_Over | OLED_Normal);
-		OLED_DrawRectangle(20,20,5,5, OLED_ON, OLED_Over | OLED_XOR);
-//		OLED_DrawString(0,0,"Hello",&Font_8x16_consolas, FONT_Regular, OLED_Over | OLED_XOR);
-		OLED_RefreshScreen();
-		OLED_FillScreen(OLED_OFF);
-		HAL_Delay(500);
+//		//测试3 正常通过
+//		OLED_DrawRectangle(0, 0, 127, 32, OLED_ON, OLED_Normal);
+//		OLED_DrawString( 0, 28, "HELLO\0", &Font_8x16_consolas, FONT_Regular, OLED_Over | OLED_XOR);
+//		OLED_DrawString(64, 28, "hello\0", &Font_8x16_consolas, FONT_Bold, OLED_nOver | OLED_Normal);
+//		OLED_RefreshScreen();
+//		OLED_FillScreen(OLED_OFF);
+//		HAL_Delay(500);
+
+//		//测试4 正常通过
+//		OLED_DrawImage(0, 0, 64, 64, Image_saber, OLED_Normal);
+//		OLED_RefreshScreen();
+//		OLED_FillScreen(OLED_OFF);
+//		HAL_Delay(500);
 		
     /* USER CODE END WHILE */
 

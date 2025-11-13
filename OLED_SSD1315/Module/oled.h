@@ -12,6 +12,11 @@
 #define FONT_Bold    2 
 #define FONT_Under   3 
 
+#define Quarter1 0x01
+#define Quarter2 0x02
+#define Quarter3 0x04
+#define Quarter4 0x08
+
 extern const uint8_t Font_8x16_consolas[96][16];
 extern const unsigned char Image_saber[512];
 
