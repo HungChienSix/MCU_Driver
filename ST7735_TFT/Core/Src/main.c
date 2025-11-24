@@ -25,7 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "st7735.h"
+#include "lcd.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -93,7 +93,7 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM11_Init();
   /* USER CODE BEGIN 2 */
-	ST7735_Init();
+	LCD_Init();
 	HAL_TIM_Base_Start(&htim11);
 	
 	char ch[10]={0};
@@ -104,39 +104,30 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		htim11.Instance->CNT = 0;
-		a = __HAL_TIM_GetCounter(&htim11);
-//		ST7735_DrawImage(0,0,32,32,img0_32x32);
-		
-//		ST7735_DrawLine( 20,20,30,20,ST7735_BLUE);
-//		ST7735_DrawLine( 20,20,10,20,ST7735_BLUE);
-//		ST7735_DrawLine( 20,20,20,30,ST7735_BLUE);
-//		ST7735_DrawLine( 20,20,20,10,ST7735_BLUE);
-//		ST7735_DrawLine( 20,20,10,10,ST7735_RED);
-//		ST7735_DrawLine( 20,20,10,30,ST7735_RED);
-//		ST7735_DrawLine( 20,20,30,10,ST7735_RED);
-//		ST7735_DrawLine( 20,20,30,30,ST7735_RED);
-//		
-//		ST7735_DrawRectangle(40,40,80,80,ST7735_BLUE);
-//		
-//		ST7735_DrawQuarterArc(30,30,10,0xF1|0xF2,ST7735_RED);
-//		ST7735_DrawQuarterSector(40,40,10,0xF1|0xF2,ST7735_RED);
-		
-		ST7735_DrawString(0, 0,"ABCDEabcde\0",ST7735_BLUE,&Font_8x16_consolas, 0);
-		ST7735_DrawString(0,16,"ABCDEabcde\0",ST7735_BLUE,&Font_8x16_consolas, 1);
-		ST7735_DrawString(0,32,"ABCDEabcde\0",ST7735_BLUE,&Font_8x16_consolas, 2);
-		ST7735_DrawString(0,48,"ABCDEabcde\0",ST7735_BLUE,&Font_8x16_consolas, 3);
-		
-//		ST7735_DrawChar( 20, 20, 'W', ST7735_BLUE, &Font_8x16);
-//		ST7735_DrawChar( 16,  0, 'G', ST7735_BLUE, &Font_8x16);
-//		ST7735_DrawRectangle(0,0,128,128,ST7735_BLACK);
-		ST7735_DrawFrame();
-		b = __HAL_TIM_GetCounter(&htim11);
-		
-		HAL_Delay(500);
-		sprintf(ch,"%d->%d,",a,b);
-		HAL_UART_Transmit(&huart1,ch,sizeof(ch),100);
-		HAL_Delay(500);
+//		htim11.Instance->CNT = 0;
+//		a = __HAL_TIM_GetCounter(&htim11);
+//		b = __HAL_TIM_GetCounter(&htim11);
+//		sprintf(ch,"%d->%d,",a,b);
+//		HAL_UART_Transmit(&huart1,ch,sizeof(ch),100);
+//		HAL_Delay(500);
+	  
+//		// LCD 绘制函数 普通测试 
+//		LCD_FillScreen(LCD_BLACK);
+//		LCD_DrawLine(0, 63, 0, 31, LCD_RED, LCD_Nor);
+//		LCD_DrawRectangle(64, 127, 0, 31, LCD_RED, LCD_Nor);
+//		LCD_DrawQuarterArc(64, 48, 10, Quarter1|Quarter2, LCD_RED, LCD_Nor);
+//		LCD_DrawQuarterSector(64, 48, 10, Quarter3|Quarter4, LCD_RED, LCD_Nor);
+//		LCD_RefreshScreen();
+//		HAL_Delay(500);
+	  
+//		// LCD 绘制函数 Xor测试 
+//		LCD_FillScreen(LCD_BLACK);
+//		LCD_DrawQuarterArc(64, 48, 10, Quarter1|Quarter2, LCD_RED, LCD_Nor);
+//		LCD_DrawQuarterSector(64, 48, 10, Quarter3|Quarter4, LCD_RED, LCD_Nor);
+//		LCD_DrawLine(0, 63, 0, 31, LCD_RED, LCD_Xor);
+//		LCD_DrawRectangle(48, 127, 0, 63, LCD_RED, LCD_Xor);
+//		LCD_RefreshScreen();
+//		HAL_Delay(500);
 		
     /* USER CODE END WHILE */
 

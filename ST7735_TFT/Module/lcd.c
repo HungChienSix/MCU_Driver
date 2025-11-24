@@ -1,14 +1,14 @@
-#include "oled.h"
-#include "ssd1315.h"
+#include "lcd.h"
+#include "st7735.h"
 
 /**
  * @brief 绘制直线 - Bresenham算法
  * @param x0,x1: 直线水平坐标起始点
  * @param y0,y1: 直线垂直坐标起始点
- * @param Pixel_Set: 绘制图像的颜色(二值)
- * @param type: 绘制模式,OLED_Xor 异或模式,OLED_Nor 普通模式
+ * @param Pixel_Set: 绘制图像的颜色(RGB565)
+ * @param type: 绘制模式,LCD_Xor 异或模式,LCD_Nor 普通模式
  */
-OLED_Event_t OLED_DrawLine(int16_t x0, int16_t x1, int16_t y0, int16_t y1, OLED_Pixel_t Pixel_Set, OLED_Type_t type)
+LCD_Event_t LCD_DrawLine(int16_t x0, int16_t x1, int16_t y0, int16_t y1, LCD_Pixel_t Pixel_Set, LCD_Type_t type)
 {
 	int16_t dx = (x1 > x0) ? (x1 - x0) : (x0 - x1);
 	int16_t dy = (x1 > x0) ? (y1 - y0) : (x0 - x1);
@@ -18,10 +18,10 @@ OLED_Event_t OLED_DrawLine(int16_t x0, int16_t x1, int16_t y0, int16_t y1, OLED_
 	int16_t e2;
 
 	while(1) {
-		if((type == OLED_Xor)&&(OLED_ReadPixel(x0,y0) == Pixel_Set))
-			OLED_DrawPixel(x0, y0, ~Pixel_Set);
+		if((type == LCD_Xor)&&(LCD_ReadPixel(x0,y0) == Pixel_Set))
+			LCD_DrawPixel(x0, y0, ~Pixel_Set);
 		else
-			OLED_DrawPixel(x0, y0, Pixel_Set);
+			LCD_DrawPixel(x0, y0, Pixel_Set);
 			
 		if (x0 == x1 && y0 == y1) break;
 		
@@ -36,20 +36,20 @@ OLED_Event_t OLED_DrawLine(int16_t x0, int16_t x1, int16_t y0, int16_t y1, OLED_
 		}
 	}
 	
-	return OLED_SUCCESS;
+	return LCD_SUCCESS;
 }
 
 /**
  * @brief 绘制实心矩形
  * @param x0,x1: 矩形水平坐标起始点
  * @param y0,y1: 矩形垂直坐标起始点
- * @param Pixel_Set: 绘制图像的颜色(二值)
- * @param type: 绘制模式,OLED_Xor 异或模式,OLED_Nor 普通模式
+ * @param Pixel_Set: 绘制图像的颜色(RGB565)
+ * @param type: 绘制模式,LCD_Xor 异或模式,LCD_Nor 普通模式
  */
-OLED_Event_t OLED_DrawRectangle(int16_t x0, int16_t x1, int16_t y0, int16_t y1, OLED_Pixel_t Pixel_Set, OLED_Type_t type)
+LCD_Event_t LCD_DrawRectangle(int16_t x0, int16_t x1, int16_t y0, int16_t y1, LCD_Pixel_t Pixel_Set, LCD_Type_t type)
 {
-	OLED_FillArea(x0, x1, y0, y1, Pixel_Set, type);
-	return OLED_SUCCESS;
+	LCD_FillArea(x0, x1, y0, y1, Pixel_Set, type);
+	return LCD_SUCCESS;
 }
 
 /**
@@ -58,13 +58,13 @@ OLED_Event_t OLED_DrawRectangle(int16_t x0, int16_t x1, int16_t y0, int16_t y1, 
  * @param r: 圆弧的半径
  * @param quadrant_mask: 绘制的象限 Quarter1,Quarter2,Quarter3,Quarter4
  * @param Pixel_Set: 绘制图像的颜色(二值)
- * @param type: 绘制模式,OLED_Xor 异或模式,OLED_Nor 普通模式
+ * @param type: 绘制模式,LCD_Xor 异或模式,LCD_Nor 普通模式
  */
-OLED_Event_t OLED_DrawQuarterArc(int16_t x0, int16_t y0, uint16_t r, uint8_t quadrant_mask, OLED_Pixel_t Pixel_Set, OLED_Type_t type)
+LCD_Event_t LCD_DrawQuarterArc(int16_t x0, int16_t y0, uint16_t r, uint8_t quadrant_mask, LCD_Pixel_t Pixel_Set, LCD_Type_t type)
 {
     if (r == 0) {
-        OLED_DrawPixel(x0, y0, Pixel_Set);
-        return OLED_SUCCESS;
+        LCD_DrawPixel(x0, y0, Pixel_Set);
+        return LCD_SUCCESS;
     }
     
     // 使用静态数组缓存圆弧点（适用于多次绘制相同半径的圆弧）
@@ -111,37 +111,37 @@ OLED_Event_t OLED_DrawQuarterArc(int16_t x0, int16_t y0, uint16_t r, uint8_t qua
         
 		int16_t x_temp,y_temp;
         if (quadrant_mask & 0x01) {x_temp = x0 + x; y_temp = y0 - y;}
-		if((type == OLED_Xor)&&(OLED_ReadPixel(x0,y0) == OLED_ON))
-			OLED_DrawPixel(x_temp, y_temp, ~Pixel_Set);
+		if((type == LCD_Xor)&&(LCD_ReadPixel(x0,y0) == Pixel_Set))
+			LCD_DrawPixel(x_temp, y_temp, ~Pixel_Set);
 		else
-			OLED_DrawPixel(x_temp, y_temp, Pixel_Set);
+			LCD_DrawPixel(x_temp, y_temp, Pixel_Set);
 		
         if (quadrant_mask & 0x02) {x_temp = x0 - x; y_temp = y0 - y;}
-		if((type == OLED_Xor)&&(OLED_ReadPixel(x0,y0) == OLED_ON))
-			OLED_DrawPixel(x_temp, y_temp, ~Pixel_Set);
+		if((type == LCD_Xor)&&(LCD_ReadPixel(x0,y0) == Pixel_Set))
+			LCD_DrawPixel(x_temp, y_temp, ~Pixel_Set);
 		else
-			OLED_DrawPixel(x_temp, y_temp, Pixel_Set);
+			LCD_DrawPixel(x_temp, y_temp, Pixel_Set);
 		
         if (quadrant_mask & 0x04) {x_temp = x0 - x; y_temp = y0 + y;}
-				if((type == OLED_Xor)&&(OLED_ReadPixel(x0,y0) == OLED_ON))
-			OLED_DrawPixel(x_temp, y_temp, ~Pixel_Set);
+				if((type == LCD_Xor)&&(LCD_ReadPixel(x0,y0) == Pixel_Set))
+			LCD_DrawPixel(x_temp, y_temp, ~Pixel_Set);
 		else
-			OLED_DrawPixel(x_temp, y_temp, Pixel_Set);
+			LCD_DrawPixel(x_temp, y_temp, Pixel_Set);
 		
         if (quadrant_mask & 0x08) {x_temp = x0 + x; y_temp = y0 + y;}
-		if((type == OLED_Xor)&&(OLED_ReadPixel(x0,y0) == OLED_ON))
-			OLED_DrawPixel(x_temp, y_temp, ~Pixel_Set);
+		if((type == LCD_Xor)&&(LCD_ReadPixel(x0,y0) == Pixel_Set))
+			LCD_DrawPixel(x_temp, y_temp, ~Pixel_Set);
 		else
-			OLED_DrawPixel(x_temp, y_temp, Pixel_Set);
+			LCD_DrawPixel(x_temp, y_temp, Pixel_Set);
     }
     
-    return OLED_SUCCESS;
+    return LCD_SUCCESS;
 }
 
 // 辅助函数：更新边界数组
 static void updateBounds(int16_t x, int16_t y, int16_t *min_x, int16_t *max_x)
 {
-    if(y >= 0 && y < SSD1315_HEIGHT) {
+    if(y >= 0 && y < ST7735_HEIGHT) {
         if(x < min_x[y]) min_x[y] = x;
         if(x > max_x[y]) max_x[y] = x;
     }
@@ -152,13 +152,13 @@ static void updateBounds(int16_t x, int16_t y, int16_t *min_x, int16_t *max_x)
  * @param x0,y0: 圆弧的圆心
  * @param r: 圆弧的半径
  * @param quadrant_mask: 绘制的象限 Quarter1,Quarter2,Quarter3,Quarter4
- * @param Pixel_Set: 绘制图像的颜色(二值)
- * @param type: 绘制模式,OLED_Xor 异或模式,OLED_Nor 普通模式
+ * @param Pixel_Set: 绘制图像的颜色(RGB565)
+ * @param type: 绘制模式,LCD_Xor 异或模式,LCD_Nor 普通模式
  */
-OLED_Event_t OLED_DrawQuarterSector(int16_t x0, int16_t y0, uint16_t r, uint8_t quadrant_mask, OLED_Pixel_t Pixel_Set, OLED_Type_t type)
+LCD_Event_t LCD_DrawQuarterSector(int16_t x0, int16_t y0, uint16_t r, uint8_t quadrant_mask, LCD_Pixel_t Pixel_Set, LCD_Type_t type)
 {
     if (r == 0) {
-        return OLED_ERROR;
+        return LCD_ERROR;
     }
     
     // 预计算圆弧的所有点
@@ -167,12 +167,12 @@ OLED_Event_t OLED_DrawQuarterSector(int16_t x0, int16_t y0, uint16_t r, uint8_t 
     int16_t d = 3 - 2 * r;
     
     // 存储每行的最小和最大x值
-    int16_t min_x[SSD1315_HEIGHT] = {0};
-    int16_t max_x[SSD1315_HEIGHT] = {0};
+    int16_t min_x[ST7735_HEIGHT] = {0};
+    int16_t max_x[ST7735_HEIGHT] = {0};
     
     // 初始化数组
-    for(int16_t i = 0; i < SSD1315_HEIGHT; i++) {
-        min_x[i] = SSD1315_WIDTH;
+    for(int16_t i = 0; i < ST7735_HEIGHT; i++) {
+        min_x[i] = ST7735_WIDTH;
         max_x[i] = -1;
     }
     
@@ -207,13 +207,13 @@ OLED_Event_t OLED_DrawQuarterSector(int16_t x0, int16_t y0, uint16_t r, uint8_t 
     }
     
     // 填充扇形区域
-    for(int16_t row = 0; row < SSD1315_HEIGHT; row++) {
+    for(int16_t row = 0; row < ST7735_HEIGHT; row++) {
         if(min_x[row] <= max_x[row]) {
-            OLED_DrawHorLine(min_x[row], max_x[row], row, Pixel_Set, type);
+            LCD_DrawHorLine(min_x[row], max_x[row], row, Pixel_Set, type);
         }
     }
     
-    return OLED_SUCCESS;
+    return LCD_SUCCESS;
 }
 
 /**
@@ -222,14 +222,14 @@ OLED_Event_t OLED_DrawQuarterSector(int16_t x0, int16_t y0, uint16_t r, uint8_t 
  * @param ch 要显示的字符
  * @param font 字体结构体指针
  * @param font_t 字体类型
- * @param Pixel_Set: 绘制图像的颜色(二值)
+ * @param Pixel_Set: 绘制图像的颜色(RGB565)
  * @param type: 绘制模式,OLED_Xor 异或模式,OLED_Nor 普通模式
  */
-OLED_Event_t OLED_DrawChar(int16_t x0, int16_t y0, char ch, const struFont *font, uint8_t font_t, OLED_Pixel_t Pixel_Set, OLED_Type_t type)
+LCD_Event_t LCD_DrawChar(int16_t x0, int16_t y0, char ch, const struFont *font, uint8_t font_t, LCD_Pixel_t Pixel_Set, LCD_Type_t type)
 {	
     // 参数检查
     if (font == NULL || ch < ' ' || ch > '~') {
-        return OLED_ERROR;
+        return LCD_ERROR;
     }
 
     // 获取字符索引（从空格开始）
@@ -251,11 +251,11 @@ OLED_Event_t OLED_DrawChar(int16_t x0, int16_t y0, char ch, const struFont *font
             char_data = font->type.Font_Under;
             break;
         default:
-            return OLED_ERROR;
+            return LCD_ERROR;
     }
     
     if (char_data == NULL) {
-        return OLED_ERROR;
+        return LCD_ERROR;
     }
     
     // 定位字符数据
@@ -269,24 +269,24 @@ OLED_Event_t OLED_DrawChar(int16_t x0, int16_t y0, char ch, const struFont *font
             uint8_t bit_index = col % 8;  
             uint8_t current_byte = char_data[row * font->bytes_per_row + byte_index];
 			
-			if(current_byte & (0x01 << bit_index))
+			if(current_byte & (0x01 << bit_index)) 
 			{
-				if((type == OLED_Xor)&&(OLED_ReadPixel(x0,y0) == Pixel_Set))
-					OLED_DrawPixel(x0 + col, y0 + row, ~Pixel_Set);
+				if((type == LCD_Xor)&&(LCD_ReadPixel(x0,y0) == Pixel_Set))
+					LCD_DrawPixel(x0 + col, y0 + row, ~Pixel_Set);
 				else
-					OLED_DrawPixel(x0 + col, y0 + row, Pixel_Set);
+					LCD_DrawPixel(x0 + col, y0 + row, Pixel_Set);
 			} 
         }
     }
     
-    return OLED_SUCCESS;
+    return LCD_SUCCESS;
 }
 
 /**
  * @brief 绘制字符串
-* @note  str: 绘制的字符串
+ * @note  坐标 (x, y) = (水平, 垂直)
  */
-OLED_Event_t OLED_DrawString(int16_t x0, int16_t y0, const char *str, const struFont *font, uint8_t font_t, OLED_Pixel_t Pixel_Set, OLED_Type_t type)
+LCD_Event_t LCD_DrawString(int16_t x0, int16_t y0, const char *str, const struFont *font, uint8_t font_t, LCD_Pixel_t Pixel_Set, LCD_Type_t type)
 {
     // 修正坐标系
 	uint16_t current_x = x0;
@@ -294,19 +294,19 @@ OLED_Event_t OLED_DrawString(int16_t x0, int16_t y0, const char *str, const stru
 	
 	while(*str != '\0')
 	{
-		OLED_DrawChar(current_x, current_y, *str, font, font_t, Pixel_Set, type);
+		LCD_DrawChar(current_x, current_y, *str, font, font_t, Pixel_Set, type);
 		
 		// 水平前进
 		current_x += font->width;
 	
 		// 检查换行
-		if(current_x + font->width >= SSD1315_WIDTH)
+		if(current_x + font->width >= ST7735_WIDTH)
 		{
-			return OLED_SUCCESS;
+			return LCD_SUCCESS;
 //			current_x = x0; // 回到起始 x
 //			current_y += font->height; // 换到下一行 (y 增加)
 //	
-//			if(current_y + font->height >= SSD1315_HEIGHT)
+//			if(current_y + font->height >= ST7735_HEIGHT)
 //			{
 //				break; // 超出屏幕底部
 //			}
@@ -314,11 +314,11 @@ OLED_Event_t OLED_DrawString(int16_t x0, int16_t y0, const char *str, const stru
 		
 		str++; 
 	}
-	return OLED_SUCCESS;
+	return LCD_SUCCESS;
 }
 
 /**
- * @brief 绘制单色位图图像(使用OLED_DrawPixel)
+ * @brief 绘制单色位图图像(使用LCD_DrawPixel)
  * @param x0: 图像左上角X坐标
  * @param y0: 图像左上角Y坐标
  * @param width: 图像宽度(像素)
@@ -326,10 +326,10 @@ OLED_Event_t OLED_DrawString(int16_t x0, int16_t y0, const char *str, const stru
  * @param image: 图像数据指针
  * @param type: 绘制模式
  */
-OLED_Event_t OLED_DrawImage(int16_t x0, int16_t y0, uint16_t width, uint16_t height, const uint8_t *image, OLED_Pixel_t Pixel_Set, OLED_Type_t type) {
+LCD_Event_t LCD_DrawImage(int16_t x0, int16_t y0, uint16_t width, uint16_t height, const uint8_t *image, LCD_Pixel_t Pixel_Set, LCD_Type_t type) {
     // 参数边界检查
-    if (x0 >= SSD1315_WIDTH || y0 >= SSD1315_HEIGHT || image == NULL) 
-        return OLED_ERROR;
+    if (x0 >= ST7735_WIDTH || y0 >= ST7735_HEIGHT || image == NULL) 
+        return LCD_ERROR;
     
     // 计算每行字节数(宽度向上取整到8的倍数)
     uint16_t bytes_per_line = (width + 7) / 8;
@@ -337,28 +337,27 @@ OLED_Event_t OLED_DrawImage(int16_t x0, int16_t y0, uint16_t width, uint16_t hei
     for (uint16_t row = 0; row < height; row++) {
         // 检查行是否在屏幕范围内
         int16_t current_y = y0 + row;
-        if (current_y < 0 || current_y >= SSD1315_HEIGHT) continue;
+        if (current_y < 0 || current_y >= ST7735_HEIGHT) continue;
         
         for (uint16_t col = 0; col < width; col++) {
             // 检查列是否在屏幕范围内
             int16_t current_x = x0 + col;
-            if (current_x < 0 || current_x >= SSD1315_WIDTH) continue;
+            if (current_x < 0 || current_x >= ST7735_WIDTH) continue;
             
             // 计算字节和位位置
             uint16_t byte_index = row * bytes_per_line + (col / 8);
             uint8_t bit_index = 7 - (col % 8); // 通常位图数据是MSB在前
             
             uint8_t current_byte = image[byte_index];
-            OLED_Pixel_t Pixel = (current_byte & (1 << bit_index)) ? OLED_ON : OLED_OFF;
-            
+			
 			if(current_byte & (0x01 << bit_index)) {
-				if((type == OLED_Xor)&&(OLED_ReadPixel(x0,y0) == Pixel_Set))
-					OLED_DrawPixel(x0 + col, y0 + row, ~Pixel_Set);
+				if((type == LCD_Xor)&&(LCD_ReadPixel(x0,y0) == Pixel_Set))
+					LCD_DrawPixel(x0 + col, y0 + row, ~Pixel_Set);
 				else
-					OLED_DrawPixel(x0 + col, y0 + row, Pixel_Set);
+					LCD_DrawPixel(x0 + col, y0 + row, Pixel_Set);
 			} 
 			
         }
     }
-    return OLED_SUCCESS; // 添加缺失的分号
+    return LCD_SUCCESS; // 添加缺失的分号
 }

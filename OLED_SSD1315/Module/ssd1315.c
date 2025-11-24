@@ -29,17 +29,11 @@ static void SSD1315_WriteData(uint8_t *data, uint16_t size){
 
 /**
 	* @brief 设置OLED屏幕方向
-	* @param rotation 0x00：正常方向 0x11：左右相反，上下颠倒
+	* @param rotation 0x00：正常方向 0xFF(或者其他)：左右相反，上下颠倒
 	*/
-void SSD1315_SetRotation(uint8_t rotation){
-	if(rotation == 0x00){
-		SSD1315_WriteCmd(0xA0); // 正常列映射
-		SSD1315_WriteCmd(0xC0); // 正常行映射
-	}
-	else if(rotation == 0x11){
-		SSD1315_WriteCmd(0xA1); 
-		SSD1315_WriteCmd(0xC8); 
-	}
+void SSD1315_SetRotation(uint8_t rotation) {
+    SSD1315_WriteCmd(rotation == 0x00 ? 0xA0 : 0xA1); // 列映射
+    SSD1315_WriteCmd(rotation == 0x00 ? 0xC0 : 0xC8); // 行映射
 }
 		
 /**
@@ -75,25 +69,18 @@ void OLED_Init(void){
 	
 	SSD1315_WriteCmd(0xAF);//if AE open the sleep mode
 	
-	OLED_FillScreen(OLED_OFF);
+	OLED_FillScreen(0);
 	OLED_RefreshScreen_Force();
 	HAL_Delay(100);
 }
-
-
 
 /**
  * @brief 在缓冲区读取像素点状态
  * @param x: X坐标(0-127)
  * @param y: Y坐标(0-63)
- * @return 像素状态: OLED_ON=点亮, OLED_OFF=熄灭, OLED_ERROR=坐标无效
+ * @return 像素状态: OLED_ON=点亮, OLED_OFF=熄灭,
  */
-OLED_Pixel_t OLED_ReadPixel(uint16_t x, uint16_t y)
-{
-    // 参数检查
-    if (x >= SSD1315_WIDTH || y >= SSD1315_HEIGHT) 
-        return OLED_ERROR;
-    
+OLED_Pixel_t OLED_ReadPixel(uint16_t x, uint16_t y){ 
     uint8_t page = y / SSD1315_PAGE_HEIGHT;
     uint8_t bit_mask = 1 << (y % SSD1315_PAGE_HEIGHT);
     
@@ -103,151 +90,90 @@ OLED_Pixel_t OLED_ReadPixel(uint16_t x, uint16_t y)
 /**
  * @brief 绘制像素点
  * @param x, y: 坐标
- * @param Pixel_Set: 像素设置
- * @param Type: 绘制类型
- * @return 最终像素状态
+ * @param Pixel_Set: 像素状态
  */
-OLED_Pixel_t OLED_DrawPixel(uint16_t x, uint16_t y, OLED_Pixel_t Pixel_Set, uint8_t Type)
-{
-    // 参数检查
-    if (x >= SSD1315_WIDTH || y >= SSD1315_HEIGHT) 
-        return OLED_ERROR;
-    
-	// 读像素值 
-    uint8_t page = y / SSD1315_PAGE_HEIGHT;
-    uint8_t bit_mask = 1 << (y % SSD1315_PAGE_HEIGHT);
-    uint8_t *pixel_byte = &display_ram[page][x];
-    OLED_Pixel_t current_pixel = (*pixel_byte & bit_mask) ? OLED_ON : OLED_OFF;
+void OLED_DrawPixel(int16_t x, int16_t y, OLED_Pixel_t Pixel_Set){
+	if((x < 0)||(y < 0)||(x > SSD1315_WIDTH-1)||(y > SSD1315_HEIGHT-1))
+		return ;
 	
-	// 排除不绘制的情况
-    if (!Pixel_Set && !(Type & OLED_Over)) {
-        return OLED_IDLE;
-    }
-    
-	// 绘制
-    switch (Type & 0x0F) { 
-        case OLED_Normal:
-            if (Pixel_Set) {
-                *pixel_byte |= bit_mask;
-                return OLED_ON;
-            } else {
-                *pixel_byte &= ~bit_mask;
-                return OLED_OFF;
-            }
-            break;
-            
-        case OLED_Inverse:
-            if (Pixel_Set) {
-                *pixel_byte &= ~bit_mask;
-                return OLED_OFF;
-            } else {
-                *pixel_byte |= bit_mask;
-                return OLED_ON;
-            }
-            break;
-            
-        case OLED_XOR:
-			if(Pixel_Set){
-				if (current_pixel) {
-					*pixel_byte &= ~bit_mask;
-					return OLED_OFF;
-				} else {
-					*pixel_byte |= bit_mask;
-					return OLED_ON;
-				}
-			}
-            break;
-            
-        default:
-            return OLED_IDLE;
-    }
+    uint8_t page = y / SSD1315_PAGE_HEIGHT;
+	uint8_t bit_mask = 1 << (y % SSD1315_PAGE_HEIGHT);
+	
+	if(Pixel_Set){
+		display_ram[page][x] |= bit_mask;
+	} else {
+		display_ram[page][x] &= ~bit_mask;
+	}
 }
 
 /**
- * @brief 绘制水平线 (优化版本)
+ * @brief 绘制水平线 
  */
-OLED_Pixel_t OLED_DrawHorizontalLine(int16_t x0, int16_t x1, int16_t y, OLED_Pixel_t SetPixel, uint8_t Type)
-{
-    // 参数检查
-    if((x0 >= SSD1315_WIDTH)||(x1 < 0)||(x0 > x1))
-		return OLED_ERROR;
-    if((y >= SSD1315_HEIGHT)||(y < 0))
-		return OLED_ERROR;
-    
-    // 对x进行裁剪
-    if (x0 < 0) x0 = 0;
-    if (x1 >= SSD1315_WIDTH) x1 = SSD1315_WIDTH - 1;
-    
-	// 绘制
-    for(int16_t x = x0; x <= x1; x++) {
-        OLED_DrawPixel(x, y, SetPixel, Type);
-    }
-	return OLED_SUCCESS;
+void OLED_DrawHorLine(int16_t x0, int16_t x1, int16_t y, OLED_Pixel_t Pixel_Set, OLED_Type_t type){
+    uint16_t x_start = (x0 < x1)? x0 : x1;
+    uint16_t x_end   = (x0 < x1)? x1 : x0;
+	
+	for(int16_t x = x_start; x <= x_end; x++) {
+		if((type == OLED_Xor)&&(OLED_ReadPixel(x,y) == OLED_ON))
+			OLED_DrawPixel(x, y, ~Pixel_Set);
+		else
+			OLED_DrawPixel(x, y, Pixel_Set);
+	}
 }
 
 /**
- * @brief 绘制垂直线 (优化版本)
+ * @brief 绘制垂直线 
  */
-OLED_Pixel_t OLED_DrawVerticalLine(int16_t x, int16_t y0, int16_t y1, OLED_Pixel_t SetPixel, uint8_t Type)
-{
-	// 参数检查
-    if((y0 >= SSD1315_WIDTH)||(y1 < 0)||(y0 > y1))
-		return OLED_ERROR;
-    if((x >= SSD1315_HEIGHT)||(x < 0))
-		return OLED_ERROR;
-    
-    // 对y进行裁剪
-    if (y0 < 0) y0 = 0;
-    if (y1 >= SSD1315_HEIGHT) y1 = SSD1315_HEIGHT - 1;
-    
-    for(int16_t y = y0; y <= y1; y++) {
-        OLED_DrawPixel(x, y, SetPixel, Type);
-    }
-	return OLED_SUCCESS;
+void OLED_DrawVerLine(int16_t x, int16_t y0, int16_t y1, OLED_Pixel_t Pixel_Set, OLED_Type_t type){
+	uint16_t y_start = (y0 < y1)? y0 : y1;
+    uint16_t y_end   = (y0 < y1)? y1 : y0;
+	
+	for(int16_t y = y_start; y <= y_end; y++) {
+		if((type == OLED_Xor)&&(OLED_ReadPixel(x,y) == OLED_ON))
+			OLED_DrawPixel(x, y, ~Pixel_Set);
+		else
+			OLED_DrawPixel(x, y, Pixel_Set);
+	}
 }
 
 /**
- * @brief 填充矩形区域 (优化版本)
+ * @brief 填充矩形区域 
  */
-OLED_Pixel_t OLED_FillArea(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, OLED_Pixel_t SetPixel, uint8_t Type)
-{
-    // 参数检查
-    if((y0 >= SSD1315_WIDTH)||(y1 < 0)||(y0 > y1))
-		return OLED_ERROR;
-    if((x0 >= SSD1315_WIDTH)||(x1 < 0)||(x0 > x1))
-		return OLED_ERROR;
+void OLED_FillArea(uint16_t x0, uint16_t x1, uint16_t y0, uint16_t y1, OLED_Pixel_t Pixel_Set, OLED_Type_t type){
+    uint16_t x_start = (x0 < x1)? x0 : x1;
+    uint16_t x_end   = (x0 < x1)? x1 : x0;
+	
+	uint16_t y_start = (y0 < y1)? y0 : y1;
+    uint16_t y_end   = (y0 < y1)? y1 : y0;
     
-    // 裁剪
-    if (x0 < 0) x0 = 0;
-    if (x1 >= SSD1315_WIDTH) x1 = SSD1315_WIDTH - 1;
-    if (y0 < 0) y0 = 0;
-    if (y1 >= SSD1315_HEIGHT) y1 = SSD1315_HEIGHT - 1;
-    
-    for (uint16_t y = y0; y <= y1; y++) {
-        for(uint16_t x = x0; x <= x1; x++) {
-            OLED_DrawPixel(x, y, SetPixel, Type);
-        }
-    }
-	return OLED_SUCCESS;
+	for(int16_t y = y_start; y <= y_end; y++) {
+		for(int16_t x = x_start; x <= x_end; x++) {
+			if((type == OLED_Xor)&&(OLED_ReadPixel(x,y) == OLED_ON))
+				OLED_DrawPixel(x, y, ~Pixel_Set);
+			else
+				OLED_DrawPixel(x, y, Pixel_Set);
+		}
+	}
 }
 
 /**
  * @brief 填充整个屏幕
  */
-void OLED_FillScreen(OLED_Pixel_t SetPixel)
-{
-    memset(display_ram, SetPixel ? 0xFF : 0x00, sizeof(display_ram));
+void OLED_FillScreen(OLED_Pixel_t Pixel_Set){
+    memset(display_ram, Pixel_Set ? 0xFF : 0x00, sizeof(display_ram));
 }
 
 #ifdef SSD1315_PARTIAL_REFRESH
 /**
- * @brief 计算页数据的校验码（简单异或校验，更快）
+ * @brief 计算页数据的校验码,最好自行换用其他算法
  */
-uint8_t OLED_CalculateChecksum(uint8_t page)
-{
+uint8_t OLED_CalculateChecksum(uint8_t page){
     uint8_t checksum = 0;
     for(int i = 0; i < SSD1315_WIDTH; i++) {
-        checksum ^= display_ram[page][i];
+		if(i%2 == 0)
+			checksum ^= display_ram[page][i];
+		else
+			checksum += display_ram[page][i];
     }
     return checksum;
 }
@@ -256,16 +182,15 @@ uint8_t OLED_CalculateChecksum(uint8_t page)
 /**
  * @brief 刷新校验码变化的屏幕
  */
-void OLED_RefreshScreen(void)
-{
+void OLED_RefreshScreen(void){
 #ifdef SSD1315_PARTIAL_REFRESH  // 修复宏名称
     for (uint8_t page = 0; page < SSD1315_PAGES; page++) {
         uint8_t current_checksum = OLED_CalculateChecksum(page);
         
         if (current_checksum != page_checksum[page]) {
             SSD1315_WriteCmd(0xB0 | page); // 设置页地址
-            SSD1315_WriteCmd(0x00);        // 设置列地址低4位
-            SSD1315_WriteCmd(0x10);        // 设置列地址高4位
+//            SSD1315_WriteCmd(0x00);        // 设置列地址低4位
+//            SSD1315_WriteCmd(0x10);        // 设置列地址高4位
             SSD1315_WriteData(display_ram[page], SSD1315_WIDTH);
             page_checksum[page] = current_checksum;
         }
@@ -278,8 +203,7 @@ void OLED_RefreshScreen(void)
 /**
  * @brief 强制刷新整个屏幕
  */
-void OLED_RefreshScreen_Force(void)
-{
+void OLED_RefreshScreen_Force(void){
     for(uint8_t page = 0; page < SSD1315_PAGES; page++) {
         SSD1315_WriteCmd(0xB0 | page); // 设置页地址
 //        SSD1315_WriteCmd(0x00);        // 设置列地址低4位  

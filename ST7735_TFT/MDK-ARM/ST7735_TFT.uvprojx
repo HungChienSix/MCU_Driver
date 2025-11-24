@@ -708,14 +708,24 @@
               <FilePath>..\Module\st7735.h</FilePath>
             </File>
             <File>
-              <FileName>tft_ui.c</FileName>
+              <FileName>display_ui.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Module\tft_ui.c</FilePath>
+              <FilePath>..\Module\display_ui.c</FilePath>
             </File>
             <File>
-              <FileName>tft_ui.h</FileName>
+              <FileName>display_ui.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Module\tft_ui.h</FilePath>
+              <FilePath>..\Module\display_ui.h</FilePath>
+            </File>
+            <File>
+              <FileName>lcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\lcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcd.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Module\lcd.h</FilePath>
             </File>
           </Files>
         </Group>

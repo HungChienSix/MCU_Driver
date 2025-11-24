@@ -25,9 +25,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "ssd1315.h"
 #include "oled.h"
 #include "stdio.h"
+#include "display_ui.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -60,7 +60,8 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 uint32_t value = 0;
-extern uint8_t display_ram[8][128];
+extern const unsigned char Image_saber[512];
+extern UI_Button_t button0;
 /* USER CODE END 0 */
 
 /**
@@ -96,7 +97,7 @@ int main(void)
   MX_CRC_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-	OLED_Init();
+  OLED_Init();
 
 //	HAL_UART_Transmit(&huart1,"Hello",sizeof("Hello"),100);
   /* USER CODE END 2 */
@@ -105,37 +106,44 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//		//测试1 正常通过
-//		OLED_DrawPixel(5, 5, OLED_ON, OLED_Over | OLED_Normal);
-//		OLED_DrawHorizontalLine(10, 20, 5, OLED_ON, OLED_Over | OLED_Normal);
-//		OLED_DrawVerticalLine(5, 10, 20, OLED_ON, OLED_Over | OLED_Normal);
-//		OLED_FillArea(20, 20, 30, 30, OLED_ON, OLED_Over | OLED_Normal);
-//		OLED_RefreshScreen();
+		OLED_FillScreen(OLED_OFF);
+		UI_DrawButton(&button0);
+		OLED_RefreshScreen();
+		HAL_Delay(500);
+	  
+//		// OLED 绘制函数 普通测试 
 //		OLED_FillScreen(OLED_OFF);
+//		OLED_DrawLine(0, 63, 0, 31, OLED_ON, OLED_Nor);
+//		OLED_DrawRectangle(64, 127, 0, 31, OLED_ON, OLED_Nor);
+//		OLED_DrawQuarterArc(64, 48, 10, Quarter1|Quarter2, OLED_ON, OLED_Nor);
+//		OLED_DrawQuarterSector(64, 48, 10, Quarter3|Quarter4, OLED_ON, OLED_Nor);
+//		OLED_RefreshScreen();
+//		HAL_Delay(500);
+	  
+//		// OLED 绘制函数 Xor测试 
+//		OLED_FillScreen(OLED_OFF);
+//		OLED_DrawQuarterArc(64, 48, 10, Quarter1|Quarter2, OLED_ON, OLED_Nor);
+//		OLED_DrawQuarterSector(64, 48, 10, Quarter3|Quarter4, OLED_ON, OLED_Nor);
+//		OLED_DrawLine(0, 63, 0, 31, OLED_ON, OLED_Xor);
+//		OLED_DrawRectangle(48, 127, 0, 63, OLED_ON, OLED_Xor);
+//		OLED_RefreshScreen();
 //		HAL_Delay(500);
 		
-//		//测试2 正常通过
-//		OLED_DrawLine(10, 10, 5, 5, OLED_ON, OLED_Normal);
-//		OLED_DrawRectangle(30, 40, 20, 30, OLED_ON, OLED_Normal);
-//		OLED_DrawQuarterArc(50, 50, 10, Quarter1|Quarter2, OLED_ON, OLED_Normal);
-//		OLED_DrawQuarterSector(50, 50, 10, Quarter3|Quarter4, OLED_ON, OLED_Normal);
-//		OLED_FillArea(20, 20, 30, 30, OLED_ON, OLED_Normal);
-//		OLED_RefreshScreen();
+//		// OLED 绘制函数 过边界测试 
 //		OLED_FillScreen(OLED_OFF);
-//		HAL_Delay(500);
-		
-//		//测试3 正常通过
-//		OLED_DrawRectangle(0, 0, 127, 32, OLED_ON, OLED_Normal);
-//		OLED_DrawString( 0, 28, "HELLO\0", &Font_8x16_consolas, FONT_Regular, OLED_Over | OLED_XOR);
-//		OLED_DrawString(64, 28, "hello\0", &Font_8x16_consolas, FONT_Bold, OLED_nOver | OLED_Normal);
+//		OLED_DrawQuarterArc(64, 48, 20, Quarter1|Quarter2, OLED_ON);
+//		OLED_DrawQuarterSector(64, 48, 20, Quarter3|Quarter4, OLED_ON);
+//		OLED_DrawLine(0, 127, 0, 63+64, OLED_ON, OLED_Xor);
+//		OLED_DrawRectangle(100, 127+16, 0, 31, OLED_ON, OLED_Xor);
 //		OLED_RefreshScreen();
-//		OLED_FillScreen(OLED_OFF);
 //		HAL_Delay(500);
 
-//		//测试4 正常通过
-//		OLED_DrawImage(0, 0, 64, 64, Image_saber, OLED_Normal);
-//		OLED_RefreshScreen();
+//		// OLED 绘制函数 过边界测试 
 //		OLED_FillScreen(OLED_OFF);
+//		OLED_DrawString(64,  0, "Hello!", &Font_8x16_consolas, FONT_Regular, OLED_ON, OLED_Nor);
+//		OLED_DrawString(64, 16, "Hello!", &Font_8x16_consolas, FONT_UNDERLINE, OLED_ON, OLED_Nor);
+//		OLED_DrawImage(0, 0, 63, 63, Image_saber, OLED_ON, OLED_Nor);
+//		OLED_RefreshScreen();
 //		HAL_Delay(500);
 		
     /* USER CODE END WHILE */

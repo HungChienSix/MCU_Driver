@@ -841,16 +841,6 @@
           <GroupName>Module</GroupName>
           <Files>
             <File>
-              <FileName>font.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Module\font.c</FilePath>
-            </File>
-            <File>
-              <FileName>font.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Module\font.h</FilePath>
-            </File>
-            <File>
               <FileName>oled.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Module\oled.c</FilePath>
@@ -871,14 +861,24 @@
               <FilePath>..\Module\ssd1315.h</FilePath>
             </File>
             <File>
-              <FileName>oled_ui.c</FileName>
+              <FileName>fonts.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Module\oled_ui.c</FilePath>
+              <FilePath>..\Module\fonts.c</FilePath>
             </File>
             <File>
-              <FileName>oled_ui.h</FileName>
+              <FileName>fonts.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Module\oled_ui.h</FilePath>
+              <FilePath>..\Module\fonts.h</FilePath>
+            </File>
+            <File>
+              <FileName>display_ui.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\display_ui.c</FilePath>
+            </File>
+            <File>
+              <FileName>display_ui.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Module\display_ui.h</FilePath>
             </File>
           </Files>
         </Group>

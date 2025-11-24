@@ -24,4 +24,4 @@ oled_ssd1315/oled.o: ..\Module\oled.c ..\Module\oled.h ..\Core\Inc\main.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pwr.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pwr_ex.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h \
-  ..\Module\font.h ..\Module\ssd1315.h ..\Core\Inc\i2c.h
+  ..\Module\fonts.h ..\Module\ssd1315.h ..\Core\Inc\i2c.h
